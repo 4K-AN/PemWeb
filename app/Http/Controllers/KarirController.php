@@ -12,6 +12,6 @@ class KarirController extends Controller
         // $jurusan = auth()->user()->jurusanFiksasi;
 
         // Tampilkan UI yang ada di resources/views/karir/simulasi.blade.php
-        return view('karir.simulasi');
+        return view('karir.Fiksasi.simulasi.index');
     }
 }

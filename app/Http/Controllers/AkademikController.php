@@ -8,6 +8,6 @@ class AkademikController extends Controller
 {
     // Menampilkan kalender
     public function index() {
-        return view('akademik.kalender');
+        return view('akademik.Kalender.index');
     }
 }
