@@ -202,12 +202,7 @@
                         </span>
                     </div>
                     
-                    <div class="glass-card rounded-[2rem] h-40 flex items-center justify-center p-4 text-center">
-                        <span class="text-[#2f5d48] font-bold text-sm md:text-base leading-tight">
-                            Software Engineer / Developer
-                        </span>
-                    </div>
-                </div>
+                   
             </div>
 
             <!-- Jenjang Karir Section -->
