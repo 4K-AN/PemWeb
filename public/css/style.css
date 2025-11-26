@@ -1,0 +1,252 @@
+/* Reset CSS dasar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    /* --- PENGATURAN BACKGROUND IMAGE --- */
+    /* Pastikan file gambar bernama 'Element.jpg' ada di folder public/img */
+    background-image: url('../img/Element.png'); 
+    background-size: 100% 100%;       /* Gambar memenuhi layar */
+    background-position: center;  /* Gambar di tengah */
+    background-repeat: no-repeat; /* Jangan diulang */
+    background-attachment: fixed; /* Gambar diam saat discroll */
+    
+    /* Warna cadangan kalau gambar gagal dimuat */
+    background-color: #e8f5e9; 
+
+    /* --- PENGATURAN LAYOUT (Supaya Konten di Tengah) --- */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container utama (Kartu Putih Besar) */
+.login-card {
+    /* Efek Kaca Transparan (Glassmorphism) */
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
+
+    /* Ukuran & Shadow */
+    width: 900px;
+    height: 550px;
+    display: flex;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* --- BAGIAN KIRI --- */
+.left-panel {
+    flex: 1;
+    /* Kita buat agak transparan juga biar nyatu sama background */
+    background-color: rgba(236, 243, 240, 0.8); 
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4CAF50; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Biar gambar logo menyesuaikan ukuran */
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+.slogan h1 {
+    font-size: 28px;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 100px; 
+}
+
+.highlight {
+    color: #58a778; 
+    font-weight: 700;
+}
+
+/* --- BAGIAN KANAN --- */
+.right-panel {
+    flex: 1;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Kita buat agak transparan juga */
+    background-color: rgba(236, 243, 240, 0.8);
+}
+
+.right-panel h2 {
+    text-align: center;
+    color: #2e5c46;
+    margin-bottom: 30px;
+}
+
+/* Input Styles */
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #ffffff;
+    font-size: 14px;
+    outline: none;
+    /* Tambah shadow dikit di input biar manis */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.password-group {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #2e5c46;
+    cursor: pointer;
+}
+
+/* Options */
+.options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #2e5c46;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.options a {
+    text-decoration: none;
+    color: #2e5c46;
+}
+
+/* Buttons */
+.btn-signin {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    background-color: #3b7058; /* Saya ubah jadi hijau tua biar kontras */
+    color: white;               /* Teks putih */
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(59, 112, 88, 0.3);
+    margin-bottom: 15px;
+    transition: background 0.3s;
+}
+
+.btn-signin:hover {
+    background-color: #2e5c46; /* Efek hover lebih gelap */
+}
+
+.divider {
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.btn-google {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    background-color: white;
+    color: #333;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.btn-google:hover {
+    transform: translateY(-2px); /* Efek naik dikit pas di hover */
+}
+
+.register-link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+}
+
+.register-link a {
+    color: #2e5c46;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* ALERT MESSAGES */
+.alert-error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid #ef9a9a;
+}
+.alert-error i { margin-right: 5px; }
+
+.alert-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid #a5d6a7;
+}
+
+/* Khusus Halaman Home */
+.home-page {
+    /* Kalau di home mau background beda, uncomment baris bawah */
+    /* background: #ecf3f0; */
+    display: block; 
+    padding-top: 20px;
+}
+
+/* --- Sisanya (Navbar, Hero) biarkan sama --- */
+.navbar {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 1px solid #aebcb6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+/* ...lanjutkan kode navbar & hero kamu di sini... */
