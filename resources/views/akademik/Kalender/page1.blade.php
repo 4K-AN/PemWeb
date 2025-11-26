@@ -129,7 +129,7 @@
                     <div class="flex gap-4">
                         <button class="hover:text-white">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 19l-7-7 7-7"></path>
                             </svg>
                         </button>
                         <button class="hover:text-white">
@@ -143,7 +143,9 @@
                 <div class="grid grid-cols-7 gap-y-4 text-center text-sm font-medium mb-4">
                     <div class="text-gray-600">27</div>
                     <div class="text-gray-600">28</div>
-                    <div>1</div>
+                      <div class="relative flex items-center justify-center">
+                        <span class="w-8 h-8 rounded-full bg-teal-500 text-gray-900 font-bold flex items-center justify-center shadow-[0_0_15px_rgba(20,184,166,0.5)]">1</span>
+                    </div>
                     <div>2</div>
                     <div>3</div>
                     <div>4</div>
@@ -159,9 +161,7 @@
                     
                     <div>13</div>
                     <div>14</div>
-                    <div class="relative flex items-center justify-center">
-                        <span class="w-8 h-8 rounded-full bg-teal-500 text-gray-900 font-bold flex items-center justify-center shadow-[0_0_15px_rgba(20,184,166,0.5)]">15</span>
-                    </div>
+                    <div>15</div>
                     <div>16</div>
                     <div>17</div>
                     <div>18</div>
@@ -190,19 +190,24 @@
                 <div class="bg-white/60 backdrop-blur-xl border border-white/60 rounded-[3rem] p-8 shadow-2xl w-full max-w-sm flex flex-col items-center text-center h-[500px]">
                     
                     <h1 class="text-[10rem] leading-none font-black text-transparent bg-clip-text bg-gradient-to-b from-gray-700 to-transparent opacity-80 -mt-4 mb-4">
-                        15
+                        1
                     </h1>
 
                     <div class="w-full space-y-4 relative z-10 -mt-16">
                         
                         <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
                             <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">1</div>
-                            <span class="text-left text-sm font-medium">Hari Perempuan Internasional</span>
+                            <span class="text-left text-sm font-medium">Hari Kehakiman Nasional (Indonesia)</span>
                         </div>
 
                         <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
                             <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</div>
-                            <span class="text-left text-sm font-medium">Beasiswa Bakti Madiun Selatan</span>
+                            <span class="text-left text-sm font-medium">Hari Peringatan Peristiwa Serangan Umum 1 Maret 1949</span>
+                        </div>
+
+                        <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
+                            <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">3</div>
+                            <span class="text-left text-sm font-medium">Beasiswa Ngawi Selatan</span>
                         </div>
 
                     </div>
