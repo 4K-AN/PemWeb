@@ -12,8 +12,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Fitur Simulasi Karir
-Route::get('/simulasi-karir', [KarirController::class, 'index'])->name('karir.simulasi');
-
-// Fitur Kalender Akademik (Baru)
-Route::get('/kalender-akademik', [AkademikController::class, 'index'])->name('akademik.kalender');
+Route::get('/kalender-akademik', [AkademikController::class, 'index'])->name('akademik.index');
+Route::get('/kalender-akademik/day/{day}', [AkademikController::class, 'detail'])->name('akademik.detail');
