@@ -54,11 +54,11 @@
     <header class="h-20 bg-white px-8 md:px-12 flex items-center justify-between shadow-sm border-b border-gray-100 z-50 relative flex-shrink-0">
 
         <div class="flex items-center gap-8">
-            <div class="flex items-center gap-3 cursor-pointer">
+            <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition">
                 <img src="{{ asset('images/Vectoredvizo.svg') }}" alt="Logo" class="w-8 h-8">
                 <span class="text-xl font-bold text-[#3B8773] tracking-wide">Edvizo.</span>
             </div>
-            <div class="hidden md:flex h-6 w-px bg-gray-200 mx-2"></div>
+            <div class="hidden md:flex h-6 w-px bg-gray-200"></div>
             <a href="/" class="hidden md:block text-gray-500 hover:text-[#3B8773] text-sm font-medium transition">Home</a>
         </div>
 
@@ -75,18 +75,43 @@
 
         <div class="flex items-center gap-4">
             <div class="text-right hidden sm:block">
-                <p class="text-sm font-bold text-[#3B8773]">Ghani Baskara</p>
+                @auth
+                    <p class="text-sm font-bold text-[#3B8773]">{{ Auth::user()->name }}</p>
+                @else
+                    <p class="text-sm font-bold text-[#3B8773]">Ghani Baskara</p>
+                @endauth
                 <p class="text-xs text-gray-500">Siswa</p>
             </div>
             <div class="relative group cursor-pointer">
                 <div class="w-10 h-10 bg-[#E8F5F3] rounded-full flex items-center justify-center border border-white shadow-sm ring-2 ring-transparent hover:ring-[#3B8773]/20 transition">
-                    <span class="text-[#3B8773] font-bold">G</span>
+                    <span class="text-[#3B8773] font-bold">
+                        @auth
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        @else
+                            G
+                        @endauth
+                    </span>
                 </div>
-                <div class="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
-                    <a href="#" class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-xl transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                        Keluar
-                    </a>
+                <div class="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
+                    @auth
+                        <a href="#" class="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl transition">
+                            Pengaturan
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="block">
+                            @csrf
+                            <button type="submit" class="w-full text-left flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-b-xl transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                Keluar
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="flex items-center gap-2 px-4 py-3 text-sm text-[#3B8773] hover:bg-[#F0F9F7] rounded-t-xl transition">
+                            Masuk
+                        </a>
+                        <a href="{{ route('register') }}" class="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-b-xl transition">
+                            Daftar
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -101,17 +126,25 @@
                     <div class="w-24 h-24 bg-white rounded-[28px] flex items-center justify-center shadow-xl shadow-teal-50 mb-6 ring-1 ring-gray-50">
                         <img src="{{ asset('images/Vectoredvizo.svg') }}" class="w-12 h-12" alt="Bot">
                     </div>
-                    <h1 class="text-3xl md:text-4xl font-bold text-[#3B8773] mb-3 tracking-tight">Hai, Ghani! 👋</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold text-[#3B8773] mb-3 tracking-tight">
+                        Hai,
+                        @auth
+                            {{ Auth::user()->name }}
+                        @else
+                            Pengunjung
+                        @endauth
+                        !
+                    </h1>
                     <p class="text-gray-400 text-lg font-light mb-10 text-center max-w-md leading-relaxed">
                         Ceritakan minatmu, saya akan bantu temukan jurusan impianmu.
                     </p>
 
                     <div class="flex flex-wrap justify-center gap-3">
                         <button onclick="fillInput('Saya ingin rekomendasi jurusan kuliah')" class="bg-white border border-gray-200 px-6 py-3 rounded-full text-sm font-medium text-gray-600 hover:border-[#3B8773] hover:text-[#3B8773] hover:shadow-md transition transform hover:-translate-y-0.5">
-                            🎓 Minta Rekomendasi
+                            Minta Rekomendasi
                         </button>
                         <button onclick="fillInput('Apa jurusan yang cocok untuk orang introver?')" class="bg-white border border-gray-200 px-6 py-3 rounded-full text-sm font-medium text-gray-600 hover:border-[#3B8773] hover:text-[#3B8773] hover:shadow-md transition transform hover:-translate-y-0.5">
-                            🤔 Konsultasi Minat
+                            Konsultasi Minat
                         </button>
                     </div>
                 </div>

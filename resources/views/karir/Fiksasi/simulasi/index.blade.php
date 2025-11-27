@@ -17,7 +17,7 @@
         @if (!$fixation)
             <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 p-8 rounded-lg mb-12">
                 <div class="flex items-start gap-4">
-                    <div class="text-4xl">⚠️</div>
+                    <div class="text-4xl">!</div>
                     <div>
                         <h2 class="text-2xl font-bold text-gray-900 mb-2">Maaf, Anda Belum Fiksasi Jurusan</h2>
                         <p class="text-gray-700 mb-4">Untuk melihat simulasi karir berdasarkan jurusan yang cocok untuk Anda, silakan lakukan konsultasi dan fiksasi jurusan terlebih dahulu.</p>
@@ -30,142 +30,12 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Semua Karir -->
-            <section>
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-2 h-8 bg-gradient-to-b from-[#3B8773] to-[#7FD4C4] rounded-full"></div>
-                    <h2 class="text-3xl font-bold text-gray-900">Semua Pilihan Karir</h2>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Career Card 1 - Software Engineer -->
-                    <a href="{{ route('simulasi.karir.detail', 'software-engineer') }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                        <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                            <div class="text-6xl">💻</div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Software Engineer</h3>
-                            <p class="text-sm text-gray-600 mb-4">Merancang dan mengembangkan perangkat lunak yang inovatif dan berkualitas tinggi</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                <span class="text-xs text-gray-500 font-medium">Junior - Senior</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Career Card 2 - Data Scientist -->
-                    <a href="{{ route('simulasi.karir.detail', 'data-scientist') }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                        <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                            <div class="text-6xl">📊</div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Data Scientist</h3>
-                            <p class="text-sm text-gray-600 mb-4">Menganalisis data untuk menghasilkan insight bisnis yang berharga</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                <span class="text-xs text-gray-500 font-medium">Analyst - Lead</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Career Card 3 - Cloud Engineer -->
-                    <a href="{{ route('simulasi.karir.detail', 'cloud-engineer') }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                        <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                            <div class="text-6xl">☁️</div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Cloud Engineer</h3>
-                            <p class="text-sm text-gray-600 mb-4">Mengelola infrastruktur cloud dan deployment aplikasi modern</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                <span class="text-xs text-gray-500 font-medium">DevOps - Architect</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Career Card 4 - Cybersecurity -->
-                    <a href="{{ route('simulasi.karir.detail', 'cybersecurity') }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                        <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                            <div class="text-6xl">🔒</div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Cybersecurity Specialist</h3>
-                            <p class="text-sm text-gray-600 mb-4">Melindungi sistem dan data dari ancaman keamanan cyber</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                <span class="text-xs text-gray-500 font-medium">Analyst - Architect</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Career Card 5 - AI Engineer -->
-                    <a href="{{ route('simulasi.karir.detail', 'ai-engineer') }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                        <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                            <div class="text-6xl">🤖</div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">AI Engineer</h3>
-                            <p class="text-sm text-gray-600 mb-4">Mengembangkan sistem AI dan machine learning yang canggih</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                <span class="text-xs text-gray-500 font-medium">Junior - Research</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Career Card 6 - UI/UX Designer -->
-                    <a href="{{ route('simulasi.karir.detail', 'uiux-designer') }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                        <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                            <div class="text-6xl">🎨</div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">UI/UX Designer</h3>
-                            <p class="text-sm text-gray-600 mb-4">Merancang pengalaman pengguna yang intuitif dan menarik</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                <span class="text-xs text-gray-500 font-medium">Junior - Lead</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Career Card 7 - Product Manager -->
-                    <a href="{{ route('simulasi.karir.detail', 'product-manager') }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                        <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                            <div class="text-6xl">📱</div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Product Manager</h3>
-                            <p class="text-sm text-gray-600 mb-4">Memimpin pengembangan produk dari konsep hingga peluncuran</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                <span class="text-xs text-gray-500 font-medium">APM - Director</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Career Card 8 - Full Stack Developer -->
-                    <a href="{{ route('simulasi.karir.detail', 'fullstack-developer') }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                        <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                            <div class="text-6xl">🌐</div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Full Stack Developer</h3>
-                            <p class="text-sm text-gray-600 mb-4">Menguasai frontend dan backend untuk membangun aplikasi lengkap</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                <span class="text-xs text-gray-500 font-medium">Junior - Tech Lead</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </section>
         @else
             <!-- Jika sudah fiksasi jurusan -->
             <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-400 p-8 rounded-lg mb-12">
                 <div class="flex items-start justify-between">
                     <div class="flex items-start gap-4 flex-1">
-                        <div class="text-4xl">✅</div>
+                        <div class="text-4xl">✓</div>
                         <div>
                             <h2 class="text-2xl font-bold text-gray-900 mb-2">Jurusan yang Difiksasi</h2>
                             <p class="text-gray-700 mb-2"><strong>{{ $fixation->jurusan }}</strong></p>
@@ -173,70 +43,50 @@
                         </div>
                     </div>
                     <a href="{{ route('chatbot.index') }}" class="text-sm font-bold text-[#3B8773] hover:text-[#2E6B5B] transition">
-                        Fiksasi Ulang →
+                        Fiksasi Ulang
                     </a>
                 </div>
             </div>
 
-            <!-- Karir Rekomendasi berdasarkan jurusan -->
+            <!-- Karir Rekomendasi dari AI -->
             <section>
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-2 h-8 bg-gradient-to-b from-[#3B8773] to-[#7FD4C4] rounded-full"></div>
-                    <h2 class="text-3xl font-bold text-gray-900">Karir yang Sesuai untuk Jurusan {{ $fixation->jurusan }}</h2>
+                    <h2 class="text-3xl font-bold text-gray-900">Karir yang Sesuai untuk {{ $fixation->jurusan }}</h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Tampilkan karir berdasarkan jurusan -->
-                    @php
-                        $jurusanKarirMap = [
-                            'Software Engineering' => ['software-engineer', 'fullstack-developer', 'ai-engineer'],
-                            'Data Science' => ['data-scientist', 'ai-engineer', 'software-engineer'],
-                            'Information Technology' => ['cloud-engineer', 'cybersecurity', 'devops'],
-                            'Graphic Design' => ['uiux-designer', 'product-manager'],
-                            // Tambahkan mapping sesuai dengan jurusan yang ada
-                        ];
+                @if (count($careers) > 0)
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($careers as $career)
+                            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100 h-full flex flex-col">
+                                <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center text-4xl">
+                                    {{ $career['title'][0] ?? 'K' }}
+                                </div>
+                                <div class="p-6 flex-1 flex flex-col">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">{{ $career['title'] ?? 'N/A' }}</h3>
+                                    <p class="text-sm text-gray-600 mb-4">{{ $career['description'] ?? 'Deskripsi tidak tersedia' }}</p>
 
-                        $karirs = $jurusanKarirMap[$fixation->jurusan] ?? ['software-engineer', 'data-scientist', 'cloud-engineer'];
-                    @endphp
+                                    @if (isset($career['relevance']))
+                                        <div class="mb-4 p-3 bg-[#F0F9F7] rounded-lg border border-[#3B8773]/10">
+                                            <p class="text-xs font-semibold text-[#3B8773] mb-1">Relevansi</p>
+                                            <p class="text-sm text-gray-700">{{ $career['relevance'] }}</p>
+                                        </div>
+                                    @endif
 
-                    @foreach ($karirs as $karir)
-                        <a href="{{ route('simulasi.karir.detail', $karir) }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:border-[#3B8773]/20 transition-all duration-300 overflow-hidden group border border-gray-100">
-                            <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] h-32 relative overflow-hidden flex items-center justify-center">
-                                <div class="text-6xl">
-                                    @switch($karir)
-                                        @case('software-engineer') 💻 @break
-                                        @case('data-scientist') 📊 @break
-                                        @case('cloud-engineer') ☁️ @break
-                                        @case('cybersecurity') 🔒 @break
-                                        @case('ai-engineer') 🤖 @break
-                                        @case('uiux-designer') 🎨 @break
-                                        @case('product-manager') 📱 @break
-                                        @case('fullstack-developer') 🌐 @break
-                                    @endswitch
+                                    <div class="pt-4 border-t border-gray-100 flex items-center justify-between mt-auto">
+                                        <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Rekomendasi</span>
+                                        <span class="text-xs text-gray-500 font-medium">{{ $career['salary'] ?? 'N/A' }}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">
-                                    @switch($karir)
-                                        @case('software-engineer') Software Engineer @break
-                                        @case('data-scientist') Data Scientist @break
-                                        @case('cloud-engineer') Cloud Engineer @break
-                                        @case('cybersecurity') Cybersecurity Specialist @break
-                                        @case('ai-engineer') AI Engineer @break
-                                        @case('uiux-designer') UI/UX Designer @break
-                                        @case('product-manager') Product Manager @break
-                                        @case('fullstack-developer') Full Stack Developer @break
-                                    @endswitch
-                                </h3>
-                                <p class="text-sm text-gray-600 mb-4">Karir yang sesuai dengan jurusan Anda</p>
-                                <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                    <span class="text-xs font-bold text-[#3B8773] bg-[#E8F5F3] px-3 py-1 rounded-full">Lihat Detail →</span>
-                                    <span class="text-xs text-gray-500 font-medium">Recommended</span>
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="bg-white rounded-2xl shadow-md p-12 border border-gray-100 text-center">
+                        <p class="text-gray-600 font-medium mb-4">Tidak ada rekomendasi karir tersedia</p>
+                        <p class="text-sm text-gray-500">Silakan refresh halaman atau coba kembali nanti</p>
+                    </div>
+                @endif
             </section>
 
             <!-- Detail Analisis Fiksasi -->
@@ -253,7 +103,7 @@
                         <div class="grid md:grid-cols-2 gap-6">
                             <!-- Strengths -->
                             <div class="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-green-100">
-                                <h5 class="text-lg font-bold text-green-700 mb-3">✅ Kekuatan</h5>
+                                <h5 class="text-lg font-bold text-green-700 mb-3">Kekuatan</h5>
                                 <ul class="space-y-2">
                                     @foreach ($fixation->swot['strengths'] ?? [] as $item)
                                         <li class="text-gray-700 flex items-start gap-2">
@@ -266,7 +116,7 @@
 
                             <!-- Weaknesses -->
                             <div class="bg-gradient-to-br from-red-50 to-white p-6 rounded-xl border border-red-100">
-                                <h5 class="text-lg font-bold text-red-700 mb-3">⚠️ Kelemahan</h5>
+                                <h5 class="text-lg font-bold text-red-700 mb-3">Kelemahan</h5>
                                 <ul class="space-y-2">
                                     @foreach ($fixation->swot['weaknesses'] ?? [] as $item)
                                         <li class="text-gray-700 flex items-start gap-2">
@@ -279,7 +129,7 @@
 
                             <!-- Opportunities -->
                             <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100">
-                                <h5 class="text-lg font-bold text-blue-700 mb-3">🎯 Peluang</h5>
+                                <h5 class="text-lg font-bold text-blue-700 mb-3">Peluang</h5>
                                 <ul class="space-y-2">
                                     @foreach ($fixation->swot['opportunities'] ?? [] as $item)
                                         <li class="text-gray-700 flex items-start gap-2">
@@ -292,7 +142,7 @@
 
                             <!-- Threats -->
                             <div class="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border border-orange-100">
-                                <h5 class="text-lg font-bold text-orange-700 mb-3">⚡ Ancaman</h5>
+                                <h5 class="text-lg font-bold text-orange-700 mb-3">Ancaman</h5>
                                 <ul class="space-y-2">
                                     @foreach ($fixation->swot['threats'] ?? [] as $item)
                                         <li class="text-gray-700 flex items-start gap-2">
@@ -309,10 +159,4 @@
         @endif
     </div>
 </div>
-
-<script>
-    document.getElementById('searchCareer')?.addEventListener('keyup', function() {
-        // Search functionality dapat diimplementasikan di sini
-    });
-</script>
 @endsection
