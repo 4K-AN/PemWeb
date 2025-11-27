@@ -26,75 +26,116 @@
 </head>
 <body class="min-h-screen bg-green-50 relative overflow-hidden font-sans">
 
+
 <!-- NAVIGASI HEADER START -->
 <nav class="w-full max-w-7xl mx-auto mt-4 px-4 relative z-50">
-    <div class="bg-gray-100 rounded-full shadow-lg flex justify-between items-center pr-2 pl-0 border border-green-800">
+    <div class="bg-gray-100 rounded-full shadow-lg flex justify-between items-center pr-2 pl-0 border-2 border-green-800">
         
         <!-- LOGO -->
-        <div class="bg-green-800 text-white rounded-l-full px-8 py-3 font-bold text-xl flex items-center h-full">
-            <a href="{{ url('/') }}" class="flex items-center gap-2 text-white no-underline">
-                <!-- Ikon Topi Wisuda (FontAwesome) -->
-                <i class="fa-solid fa-graduation-cap"></i> 
-                Edvizo.
-            </a>
-        </div>
+        <div class="bg-gradient-to-r from-green-600 to-green-600 text-white rounded-l-full px-6 md:px-8 py-3 font-bold text-lg md:text-xl flex items-center h-full hover:from-green-700 hover:to-green-600 transition-all">
+    <a href="{{ url('/') }}" class="flex items-center gap-2 text-white no-underline">
+        
+        <img src="{{ asset('images/logo.png') }}" alt="Edvizo Logo" class="h-8 md:h-10 w-auto object-contain">
+        
+        <span class="hidden sm:inline">Edvizo.</span>
+    </a>
+</div>
 
-        <!-- MENU TENGAH -->
-        <div class="flex-1 flex justify-center gap-8 text-green-800 font-semibold">
+        <!-- MENU TENGAH - Desktop -->
+        <div class="hidden lg:flex flex-1 justify-center gap-8 text-green-800 font-semibold">
             
             <!-- Dropdown 1: Konsultasi -->
             <div class="group relative inline-block text-left">
-                <button class="flex items-center gap-1 hover:text-green-600 focus:outline-none">
-                    Konsultasi
-                    <!-- Panah Bawah -->
+                <button class="flex items-center gap-1 hover:text-green-600 focus:outline-none transition-colors">
+                    <i class="fa-solid fa-comments"></i>
+                    <span class="hidden xl:inline">Konsultasi</span>
                     <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
 
-                <!-- Isi Dropdown -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-green-700 text-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
-                    <a href="#" class="block px-4 py-3 hover:bg-green-600 border-b border-green-600 no-underline text-white">Chat dengan Edvizor</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-green-600 border-b border-green-600 no-underline text-white">Rekomendasi Instan</a>
-                    <a href="{{ url('/simulasi-karir') }}" class="block px-4 py-3 hover:bg-green-600 no-underline text-white">Hasil Fiksasi</a>
+                <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-52 bg-gradient-to-b from-green-800 to-green-700 text-white rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
+                    <a href="#" class="block px-5 py-3 hover:bg-green-600 border-b border-green-600/50 no-underline text-white transition-colors">
+                        <i class="fa-solid fa-robot mr-2"></i>Chat dengan Edvizor
+                    </a>
+                    <a href="#" class="block px-5 py-3 hover:bg-green-600 border-b border-green-600/50 no-underline text-white transition-colors">
+                        <i class="fa-solid fa-lightbulb mr-2"></i>Rekomendasi Instan
+                    </a>
+                    <a href="/simulasi-karir" class="block px-5 py-3 hover:bg-green-600 no-underline text-white transition-colors">
+                        <i class="fa-solid fa-chart-line mr-2"></i>Hasil Fiksasi
+                    </a>
                 </div>
             </div>
 
             <!-- Dropdown 2: Layanan Informasi -->
             <div class="group relative inline-block text-left">
-                <button class="flex items-center gap-1 hover:text-green-600 focus:outline-none">
-                    Layanan Informasi
+                <button class="flex items-center gap-1 hover:text-green-600 focus:outline-none transition-colors">
+                    <i class="fa-solid fa-info-circle"></i>
+                    <span class="hidden xl:inline">Layanan Informasi</span>
                     <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
 
-                <!-- Isi Dropdown -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-56 bg-green-700 text-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
-                    <a href="#" class="block px-4 py-3 hover:bg-green-600 border-b border-green-600 no-underline text-white">Informasi Tryout</a>
-                    <a href="{{ url('/kalender-akademik') }}" class="block px-4 py-3 hover:bg-green-600 border-b border-green-600 no-underline text-white">Kalender Akademik</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-green-600 no-underline text-white">Informasi Beasiswa</a>
+                <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-56 bg-gradient-to-b from-green-800 to-green-700 text-white rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
+                    <a href="#" class="block px-5 py-3 hover:bg-green-600 border-b border-green-600/50 no-underline text-white transition-colors">
+                        <i class="fa-solid fa-file-alt mr-2"></i>Informasi Tryout
+                    </a>
+                    <a href="/kalender-akademik" class="block px-5 py-3 hover:bg-green-600 border-b border-green-600/50 no-underline text-white transition-colors">
+                        <i class="fa-solid fa-calendar-days mr-2"></i>Kalender Akademik
+                    </a>
+                    <a href="#" class="block px-5 py-3 hover:bg-green-600 no-underline text-white transition-colors">
+                        <i class="fa-solid fa-graduation-cap mr-2"></i>Informasi Beasiswa
+                    </a>
                 </div>
             </div>
         </div>
 
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="lg:hidden text-green-800 px-4">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+
         <!-- USER PROFILE / LOGOUT -->
-        <div class="flex items-center gap-3 pr-4">
-            <span class="text-green-800 font-bold text-sm">Kelompok 5</span>
-            <!-- Form Logout (Gunakan '#' jika route belum ada) -->
-            <form method="POST" action="#"> 
-                @csrf
-                <button type="submit" class="text-green-800 hover:text-red-600 transition flex items-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                </button>
-            </form>
+        <div class="hidden lg:flex items-center gap-3 pr-4">
+            <span class="text-green-800 font-bold text-sm flex items-center gap-2">
+                <i class="fa-solid fa-users"></i>
+                Kelompok 5
+            </span>
+            <button type="button" class="text-green-800 hover:text-red-600 transition-all hover:scale-110 transform" title="Logout">
+                <i class="fa-solid fa-right-from-bracket text-xl"></i>
+            </button>
         </div>
 
     </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobile-menu" class="mobile-menu lg:hidden mt-4 bg-white rounded-2xl shadow-xl border-2 border-green-800 overflow-hidden">
+        <div class="p-4 space-y-2">
+            <div class="border-b border-gray-200 pb-2">
+                <p class="font-bold text-green-800 mb-2">Konsultasi</p>
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded no-underline">Chat dengan Edvizor</a>
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded no-underline">Rekomendasi Instan</a>
+                <a href="/simulasi-karir" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded no-underline">Hasil Fiksasi</a>
+            </div>
+            <div class="border-b border-gray-200 pb-2">
+                <p class="font-bold text-green-800 mb-2">Layanan Informasi</p>
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded no-underline">Informasi Tryout</a>
+                <a href="/kalender-akademik" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded no-underline">Kalender Akademik</a>
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded no-underline">Informasi Beasiswa</a>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+                <span class="text-green-800 font-bold text-sm">Kelompok 5</span>
+                <button class="text-green-800 hover:text-red-600">
+                    <i class="fa-solid fa-right-from-bracket text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 </nav>
 
-<!-- CSS PENDUKUNG AGAR DROPDOWN MUNCUL SAAT DI-HOVER -->
 <style>
     .group:hover .group-hover\:visible { visibility: visible; }
     .group:hover .group-hover\:opacity-100 { opacity: 1; }
 </style>
 <!-- NAVIGASI HEADER END -->
+
 
     <!-- Background Elements -->
     <div class="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
@@ -112,7 +153,7 @@
         <div class="absolute top-8 left-4 md:left-20">
             <a href="/kalender-akademik" class="w-10 h-10 rounded-full border border-green-600 flex items-center justify-center text-green-800 hover:bg-green-600 hover:text-white transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M30 19l-7-7 7-7"></path>
                 </svg>
             </a>
         </div>
@@ -129,7 +170,7 @@
                     <div class="flex gap-4">
                         <button class="hover:text-white">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M30 19l-7-7 7-7"></path>
                             </svg>
                         </button>
                         <button class="hover:text-white">
@@ -159,9 +200,7 @@
                     
                     <div>13</div>
                     <div>14</div>
-                    <div class="relative flex items-center justify-center">
-                        <span class="w-8 h-8 rounded-full bg-teal-500 text-gray-900 font-bold flex items-center justify-center shadow-[0_0_15px_rgba(20,184,166,0.5)]">15</span>
-                    </div>
+                    <div>15</div>   
                     <div>16</div>
                     <div>17</div>
                     <div>18</div>
@@ -178,7 +217,9 @@
                     <div>27</div>
                     <div>28</div>
                     <div>29</div>
-                    <div>30</div>
+                     <div class="relative flex items-center justify-center">
+                        <span class="w-8 h-8 rounded-full bg-teal-500 text-gray-900 font-bold flex items-center justify-center shadow-[0_0_15px_rgba(20,184,166,0.5)]">30</span>
+                    </div>
                     <div>31</div>
                     <div class="text-gray-600">1</div>
                     <div class="text-gray-600">2</div>
@@ -190,19 +231,29 @@
                 <div class="bg-white/60 backdrop-blur-xl border border-white/60 rounded-[3rem] p-8 shadow-2xl w-full max-w-sm flex flex-col items-center text-center h-[500px]">
                     
                     <h1 class="text-[10rem] leading-none font-black text-transparent bg-clip-text bg-gradient-to-b from-gray-700 to-transparent opacity-80 -mt-4 mb-4">
-                        15
+                        30
                     </h1>
 
                     <div class="w-full space-y-4 relative z-10 -mt-16">
                         
                         <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
                             <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">1</div>
-                            <span class="text-left text-sm font-medium">Hari Perempuan Internasional</span>
+                            <span class="text-left text-sm font-medium">Hari Arsitektur Indonesia</span>
                         </div>
 
                         <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
                             <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</div>
-                            <span class="text-left text-sm font-medium">Beasiswa Bakti Madiun Selatan</span>
+                            <span class="text-left text-sm font-medium">Hari Hutan Sedunia</span>
+                        </div>
+
+                        <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
+                            <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</div>
+                            <span class="text-left text-sm font-medium">Hari Air Sedunia</span>
+                        </div>
+
+                        <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
+                            <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</div>
+                            <span class="text-left text-sm font-medium">Hari Peringatan Bandung Lautan Api</span>
                         </div>
 
                     </div>
