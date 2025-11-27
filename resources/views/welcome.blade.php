@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#3B8773">
     <title>UI Test - Edvizo</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -46,6 +47,8 @@
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            overflow-y: auto;
+            height: 100vh;
         }
 
         /* Main Content */
@@ -56,6 +59,7 @@
             background: white;
             position: relative;
             width: 100%;
+            height: 100vh;
         }
 
         /* Sidebar Kanan */
@@ -66,6 +70,7 @@
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            height: 100vh;
         }
 
         /* Responsive Logic */
@@ -96,6 +101,7 @@
             height: 70px; border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 25px; background: white; z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
         .badge { background: var(--primary-light); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; }
@@ -111,6 +117,7 @@
         .chat-area {
             flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px;
             background-color: #FAFAFA; scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Welcome State */
@@ -134,6 +141,7 @@
         .msg-bubble {
             max-width: 85%; padding: 12px 18px; border-radius: 18px;
             font-size: 14px; line-height: 1.5; position: relative; word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         @media (min-width: 768px) { .msg-bubble { max-width: 70%; font-size: 15px; } }
 
@@ -144,6 +152,7 @@
         .msg-bubble.user {
             background-color: white; color: var(--text-main); border: 1px solid var(--border);
             border-top-right-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         }
 
         .bot-icon-small {
@@ -160,6 +169,7 @@
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: linear-gradient(to top, #FAFAFA 80%, transparent);
             padding: 20px; display: flex; justify-content: center;
+            z-index: 10;
         }
         
         .input-box {
@@ -173,6 +183,11 @@
         .chat-input {
             flex: 1; border: none; outline: none; font-size: 15px;
             color: var(--text-main); font-family: inherit; background: transparent;
+            padding: 12px 0;
+        }
+        .chat-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
         }
 
         .send-btn {
@@ -199,6 +214,32 @@
 
         /* Footer Sidebar */
         .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .app-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar-left, .sidebar-right {
+                width: 100%;
+                height: auto;
+                max-height: 60vh;
+            }
+            
+            .sidebar-right {
+                border-left: none;
+                border-top: 1px solid var(--border);
+            }
+            
+            .msg-bubble {
+                max-width: 90%;
+            }
+            
+            .input-container {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -215,15 +256,15 @@
 
         <nav class="nav">
             <a class="nav-item">
-                <svg class="nav-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                 Home
             </a>
             <a class="nav-item active">
-                <svg class="nav-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                 Konsultasi
             </a>
             <a class="nav-item">
-                <svg class="nav-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
                 Layanan Informasi
             </a>
         </nav>
@@ -232,7 +273,7 @@
 
         <div class="sidebar-footer">
             <a class="nav-item" style="margin:0; color:white;">
-                <svg class="nav-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 Keluar
             </a>
         </div>
@@ -242,7 +283,7 @@
         <header class="header">
             <div class="breadcrumb">
                 <span>Konsultasi</span>
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                 <span class="badge">Percakapan</span>
             </div>
             <div class="user-profile">
@@ -270,7 +311,7 @@
             <div class="input-box">
                 <input type="text" id="user-input" class="chat-input" placeholder="Ketik pesan..." autocomplete="off">
                 <button id="send-btn" class="send-btn">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                 </button>
             </div>
         </div>
@@ -294,7 +335,7 @@
         </div>
         
         <div style="padding: 20px; border-top: 1px solid #eee;">
-            <button onclick="location.reload()" style="width: 100%; padding: 12px; background: var(--primary-light); color: var(--primary); border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">
+            <button onclick="location.reload()" style="width: 100%; padding: 12px; background: var(--primary-light); color: var(--primary); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
                 Percakapan Baru
             </button>
         </div>
@@ -330,8 +371,8 @@
         // 3. Simulasi Balasan Bot (Delay 1.5 detik)
         setTimeout(() => {
             document.getElementById(loadingId).remove();
-            // Balasan Dummy Statis (Karena request "Tanpa Fitur")
-            addMessage("Ini adalah balasan dummy untuk preview UI. Tampilan bubble bot akan menyesuaikan panjang teks.", 'bot');
+            // Balasan Dummy Statis
+            addMessage("Ini adalah balasan dummy untuk preview UI. Tampilan bubble bot akan menyesuaikan panjang teks secara otomatis.", 'bot');
         }, 1500);
     }
 
@@ -344,7 +385,7 @@
     // Helper: Tambah Bubble ke Layar
     function addMessage(text, sender) {
         const div = document.createElement('div');
-        div.className = msg-row ${sender};
+        div.className = `msg-row ${sender}`; // FIX: menggunakan backticks untuk template literal
         
         // Icon Bot jika pengirim adalah bot
         const botIcon = sender === 'bot' ? `
@@ -380,6 +421,11 @@
         chatContainer.scrollTop = chatContainer.scrollHeight;
         return id;
     }
+    
+    // Auto-focus pada input field saat halaman load
+    document.addEventListener('DOMContentLoaded', function() {
+        userInput.focus();
+    });
 </script>
 
 </body>
