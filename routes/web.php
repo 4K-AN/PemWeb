@@ -5,12 +5,19 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\KarirController;
+use App\Http\Controllers\AkademikController;
 use Illuminate\Support\Facades\Http;
 
 // Home Route - Mengarah ke halaman home baru
 Route::get('/', function () {
     return view('home_edvizo');
 })->name('home');
+
+// Home Route alternatif
+Route::get('/home', function () {
+    return view('home_edvizo');
+});
 
 // Auth Routes - Login tetap tidak berubah
 Route::get('/login-edvizo', function () {
@@ -45,11 +52,9 @@ Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show'])->name('beasisw
 Route::get('/beasiswa-search', [BeasiswaController::class, 'search'])->name('beasiswa.search');
 
 // Kalender Akademik Routes
-Route::get('/kalender-akademik', function () {
-    return view('akademik.Kalender.index');
-})->name('akademik.kalender');
+Route::get('/kalender-akademik', [AkademikController::class, 'index'])->name('akademik.kalender');
+Route::get('/kalender-akademik/{day}', [AkademikController::class, 'detail'])->name('akademik.kalender.detail');
 
 // Simulasi Karir Routes
-Route::get('/simulasi-karir', function () {
-    return view('karir.Fiksasi.simulasi.index');
-})->name('simulasi.karir');
+Route::get('/simulasi-karir', [KarirController::class, 'index'])->name('simulasi.karir');
+Route::get('/simulasi-karir/{slug}', [KarirController::class, 'show'])->name('simulasi.karir.detail');

@@ -1,10 +1,10 @@
 <header class="h-20 bg-white px-6 md:px-12 flex items-center justify-between shadow-sm border-b border-gray-100 sticky top-0 z-50">
 
     <div class="flex items-center gap-8">
-        <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition">
+        <a href="/" class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition">
             <img src="{{ asset('images/Vectoredvizo.svg') }}" alt="Logo" class="w-8 h-8">
             <span class="text-xl font-bold text-[#3B8773] tracking-wide">Edvizo.</span>
-        </div>
+        </a>
         <div class="hidden md:flex h-6 w-px bg-gray-200"></div>
         <a href="/" class="hidden md:block text-gray-500 hover:text-[#3B8773] text-sm font-medium transition">Home</a>
     </div>
@@ -18,12 +18,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            <div class="absolute left-0 mt-0 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50 top-full">
+            <div class="absolute left-0 mt-0 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50 top-full">
                 <a href="{{ route('chatbot.index') }}" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] border-b border-gray-50 transition font-medium text-sm">
                     <span class="flex items-center gap-2">💬 Konsultasi Jurusan</span>
                 </a>
-                <a href="#" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] border-b border-gray-50 transition font-medium text-sm">
-                    <span class="flex items-center gap-2">📊 Hasil Fiksasi</span>
+                <a href="{{ route('simulasi.karir') }}" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] transition font-medium text-sm">
+                    <span class="flex items-center gap-2">📊 Simulasi Karir</span>
                 </a>
             </div>
         </div>
@@ -36,8 +36,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            <div class="absolute left-0 mt-0 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50 top-full">
-                <a href="#" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] border-b border-gray-50 transition font-medium text-sm">
+            <div class="absolute left-0 mt-0 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50 top-full">
+                <a href="{{ route('akademik.kalender') }}" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] border-b border-gray-50 transition font-medium text-sm">
                     <span class="flex items-center gap-2">📅 Kalender Akademik</span>
                 </a>
                 <a href="{{ route('beasiswa.index') }}" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] transition font-medium text-sm">

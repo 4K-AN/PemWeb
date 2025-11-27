@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fixation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -13,7 +15,7 @@ class ChatbotController extends Controller
         return view('chatbot.index');
     }
 
-public function sendMessage(Request $request)
+    public function sendMessage(Request $request)
     {
         $userMessage = $request->input('message');
         $history = $request->input('history', []);
@@ -129,6 +131,22 @@ public function sendMessage(Request $request)
                 $data = json_decode($rawReply, true);
 
                 if (json_last_error() === JSON_ERROR_NONE) {
+                    // Simpan ke database jika user sudah login
+                    if (Auth::check()) {
+                        Fixation::create([
+                            'user_id' => Auth::id(),
+                            'jurusan' => $data['jurusan'],
+                            'deskripsi' => $data['deskripsi'],
+                            'alasan_cocok' => $data['alasan_cocok'],
+                            'swot' => [
+                                'strengths' => $data['swot']['strengths'] ?? [],
+                                'weaknesses' => $data['swot']['weaknesses'] ?? [],
+                                'opportunities' => $data['swot']['opportunities'] ?? [],
+                                'threats' => $data['swot']['threats'] ?? [],
+                            ],
+                        ]);
+                    }
+
                     return response()->json(['type' => 'recommendation', 'data' => $data]);
                 } else {
                     $cleanJson = str_replace(['```json', '```'], '', $rawReply);

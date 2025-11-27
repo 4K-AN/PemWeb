@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -238,7 +237,7 @@
                     <ul class="space-y-2 text-sm">
                         <li><a href="{{ route('chatbot.index') }}" class="hover:text-[#7FD4C4] transition">Konsultasi Jurusan</a></li>
                         <li><a href="{{ route('beasiswa.index') }}" class="hover:text-[#7FD4C4] transition">Info Beasiswa</a></li>
-                        <li><a href="#" class="hover:text-[#7FD4C4] transition">Kalender Akademik</a></li>
+                        <li><a href="{{ route('akademik.kalender') }}" class="hover:text-[#7FD4C4] transition">Kalender Akademik</a></li>
                     </ul>
                 </div>
                 <div>

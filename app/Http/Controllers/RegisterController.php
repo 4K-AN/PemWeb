@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\User; 
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -15,21 +15,18 @@ class RegisterController extends Controller
 
     public function process(Request $request)
     {
-      // 1. Validasi Input (Satpam Pengecekan)
-        $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users', // 'unique' biar email gak kembar
-            'password' => 'required|min:8|confirmed'  // 'confirmed' akan otomatis cek input 'password_confirmation'
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        // 2. Simpan ke Database
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password) // Enkripsi password
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
-        // 3. Kalau sukses, lempar ke halaman Login bawa pesan sukses
-        return redirect('/login-edvizo')->with('success', 'Registrasi berhasil! Silakan login ya.');
+        return redirect('/login-edvizo')->with('success', 'Registrasi berhasil! Silakan login dengan akun Anda.');
     }
 }

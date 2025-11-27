@@ -2,14 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fixation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KarirController extends Controller
 {
     // Fungsi untuk halaman utama (Daftar Kartu)
     public function index()
     {
-        return view('karir.Fiksasi.simulasi.index'); 
+        // Cek apakah user sudah login
+        if (!Auth::check()) {
+            return view('karir.Fiksasi.simulasi.index', ['fixation' => null]);
+        }
+
+        // Ambil fiksasi terbaru user
+        $fixation = Auth::user()->latestFixation();
+
+        // Jika ada fiksasi, tampilkan karir yang sesuai dengan jurusan
+        return view('karir.Fiksasi.simulasi.index', ['fixation' => $fixation]);
     }
 
     // Fungsi untuk halaman Detail
