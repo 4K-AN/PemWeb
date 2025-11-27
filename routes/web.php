@@ -3,43 +3,53 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\BeasiswaController;
+use App\Http\Controllers\ChatbotController;
+use Illuminate\Support\Facades\Http;
 
+// Home Route - Mengarah ke halaman home baru
 Route::get('/', function () {
-    return view('register_edvizo');
-});
+    return view('home_edvizo');
+})->name('home');
 
+// Auth Routes - Login tetap tidak berubah
 Route::get('/login-edvizo', function () {
     return view('login_edvizo');
 })->name('login');
 
 Route::post('/login-edvizo/action', [LoginController::class, 'authenticate'])->name('login.action');
 
-Route::get('/home', function () {
-    return view('home_edvizo');
-});
-
+// Auth Routes - Register tetap tidak berubah
 Route::get('/register-edvizo', [RegisterController::class, 'show'])->name('register');
 
-// Proses Data Register (Disiapkan untuk nanti)
 Route::post('/register-edvizo/action', [RegisterController::class, 'process'])->name('register.action');
 
-use App\Http\Controllers\ChatbotController;
+// Logout Route
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// Chatbot Routes - Tidak berubah
 Route::get('/konsultasi-jurusan', [ChatbotController::class, 'index'])->name('chatbot.index');
 Route::post('/konsultasi-jurusan/send', [ChatbotController::class, 'sendMessage'])->name('chatbot.send');
 
-use Illuminate\Support\Facades\Http;
-
-
+// Debug Route
 Route::get('/debug-gemini', function () {
     $apiKey = env('GEMINI_API_KEY');
-    // Kita minta daftar model yang tersedia
     $response = Http::withoutVerifying()->get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
 
     return $response->json();
 });
 
-
+// Beasiswa Routes
 Route::get('/info-beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show'])->name('beasiswa.show');
-Route::get('/search', [BeasiswaController::class, 'search'])->name('beasiswa.search');
+Route::get('/beasiswa-search', [BeasiswaController::class, 'search'])->name('beasiswa.search');
+
+// Kalender Akademik Routes
+Route::get('/kalender-akademik', function () {
+    return view('akademik.Kalender.index');
+})->name('akademik.kalender');
+
+// Simulasi Karir Routes
+Route::get('/simulasi-karir', function () {
+    return view('karir.Fiksasi.simulasi.index');
+})->name('simulasi.karir');

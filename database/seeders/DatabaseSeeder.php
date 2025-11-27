@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'rafi.kamasyamsi@gmail.com',
             'password' => bcrypt('123'),
         ]);
+
+        $this->call(BeasiswaSeeder::class);
     }
 }

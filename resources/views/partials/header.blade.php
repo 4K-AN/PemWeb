@@ -1,59 +1,73 @@
-<nav class="w-full max-w-7xl mx-auto mt-4 px-4 relative z-50">
-    <div class="bg-gray-100 rounded-full shadow-lg flex justify-between items-center pr-2 pl-0 border border-green-800">
-        
-        <div class="bg-green-800 text-white rounded-l-full px-8 py-3 font-bold text-xl flex items-center h-full">
-            <a href="{{ url('/') }}" class="flex items-center gap-2">
-                <i class="fa-solid fa-graduation-cap"></i> Edvizo.
-            </a>
+<header class="h-20 bg-white px-6 md:px-12 flex items-center justify-between shadow-sm border-b border-gray-100 sticky top-0 z-50">
+
+    <div class="flex items-center gap-8">
+        <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition">
+            <img src="{{ asset('images/Vectoredvizo.svg') }}" alt="Logo" class="w-8 h-8">
+            <span class="text-xl font-bold text-[#3B8773] tracking-wide">Edvizo.</span>
         </div>
-
-        <div class="flex-1 flex justify-center gap-8 text-green-800 font-semibold">
-            
-            <div class="group relative inline-block text-left">
-                <button class="flex items-center gap-1 hover:text-green-600 focus:outline-none">
-                    Konsultasi
-                    <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-
-                <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-green-700 text-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
-                    <a href="#" class="block px-4 py-3 hover:bg-green-600 border-b border-green-600">Chat dengan Edvizor</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-green-600 border-b border-green-600">Rekomendasi Instan</a>
-                    <a href="{{ url('/simulasi-karir') }}" class="block px-4 py-3 hover:bg-green-600">Hasil Fiksasi</a>
-                </div>
-            </div>
-
-            <div class="group relative inline-block text-left">
-                <button class="flex items-center gap-1 hover:text-green-600 focus:outline-none">
-                    Layanan Informasi
-                    <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-
-                <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-56 bg-green-700 text-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
-                    <a href="#" class="block px-4 py-3 hover:bg-green-600 border-b border-green-600">Informasi Tryout</a>
-                    <a href="{{ url('/kalender-akademik') }}" class="block px-4 py-3 hover:bg-green-600 border-b border-green-600">Kalender Akademik</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-green-600">Informasi Beasiswa</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-3 pr-4">
-            <span class="text-green-800 font-bold text-sm">Kelompok 5</span>
-            <form method="POST" action="#"> @csrf
-                <button type="submit" class="text-green-800 hover:text-red-600 transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                </button>
-            </form>
-        </div>
-
+        <div class="hidden md:flex h-6 w-px bg-gray-200"></div>
+        <a href="/" class="hidden md:block text-gray-500 hover:text-[#3B8773] text-sm font-medium transition">Home</a>
     </div>
-</nav>
 
-<style>
-    /* Memastikan dropdown muncul saat di-hover pada parent (.group) */
-    .group:hover .group-hover\:visible {
-        visibility: visible;
-    }
-    .group:hover .group-hover\:opacity-100 {
-        opacity: 1;
-    }
-</style>
+    <div class="hidden md:flex items-center gap-8 text-gray-600 font-medium">
+        <!-- Konsultasi Dropdown -->
+        <div class="group relative inline-block">
+            <button class="flex items-center gap-2 hover:text-[#3B8773] transition py-2">
+                Konsultasi
+                <svg class="w-4 h-4 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="absolute left-0 mt-0 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50 top-full">
+                <a href="{{ route('chatbot.index') }}" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] border-b border-gray-50 transition font-medium text-sm">
+                    <span class="flex items-center gap-2">💬 Konsultasi Jurusan</span>
+                </a>
+                <a href="#" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] border-b border-gray-50 transition font-medium text-sm">
+                    <span class="flex items-center gap-2">📊 Hasil Fiksasi</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Informasi Dropdown -->
+        <div class="group relative inline-block">
+            <button class="flex items-center gap-2 hover:text-[#3B8773] transition py-2">
+                Informasi
+                <svg class="w-4 h-4 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="absolute left-0 mt-0 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50 top-full">
+                <a href="#" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] border-b border-gray-50 transition font-medium text-sm">
+                    <span class="flex items-center gap-2">📅 Kalender Akademik</span>
+                </a>
+                <a href="{{ route('beasiswa.index') }}" class="block px-6 py-3 hover:bg-[#F0F9F7] text-gray-700 hover:text-[#3B8773] transition font-medium text-sm">
+                    <span class="flex items-center gap-2">🎓 Info Beasiswa</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <div class="hidden sm:block text-right">
+            <p class="text-sm font-bold text-[#3B8773]">Kelompok 5</p>
+            <p class="text-xs text-gray-500">Pengembang</p>
+        </div>
+        <div class="relative group cursor-pointer">
+            <div class="w-10 h-10 bg-[#E8F5F3] rounded-full flex items-center justify-center border border-white shadow-sm ring-2 ring-transparent hover:ring-[#3B8773]/20 transition">
+                <span class="text-[#3B8773] font-bold text-sm">K5</span>
+            </div>
+            <div class="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
+                <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-t-xl transition font-medium">
+                    ⚙️ Pengaturan
+                </a>
+                <form method="POST" action="{{ route('logout') ?? '#' }}" class="block">
+                    @csrf
+                    <button type="submit" class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-b-xl transition font-medium flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        Keluar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
