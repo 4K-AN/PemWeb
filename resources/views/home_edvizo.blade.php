@@ -1,12 +1,95 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Edvizo</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Edvizo - Platform Asisten Pendidikan Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f9f5;
+        }
+
+        .header-bg {
+            background: linear-gradient(135deg, #4a7c66 0%, #3b8773 100%);
+        }
+
+        .edvizo-pattern {
+            background-image:
+                linear-gradient(135deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                linear-gradient(225deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                linear-gradient(135deg, transparent 75%, rgba(255,255,255,0.1) 75%),
+                linear-gradient(225deg, transparent 75%, rgba(255,255,255,0.1) 75%);
+            background-size: 20px 20px;
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #166534 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 124, 102, 0.1);
+        }
+
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .bg-leaf {
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0c-13.3 0-25.9 3.4-36.9 9.4-10.9 6-19.9 15-25.9 25.9-6 11-9.4 23.6-9.4 36.9s3.4 25.9 9.4 36.9c6 10.9 15 19.9 25.9 25.9 11 6 23.6 9.4 36.9 9.4s25.9-3.4 36.9-9.4c10.9-6 19.9-15 25.9-25.9 6-11 9.4-23.6 9.4-36.9s-3.4-25.9-9.4-36.9c-6-10.9-15-19.9-25.9-25.9-11-6-23.6-9.4-36.9-9.4zm0 10c10.6 0 20.7 2.7 29.5 7.5 8.7 4.8 16.1 11.8 21 20 4.8 8.8 7.5 18.9 7.5 29.5s-2.7 20.7-7.5 29.5c-4.8 8.7-11.8 16.1-21 21-8.8 4.8-18.9 7.5-29.5 7.5s-20.7-2.7-29.5-7.5c-8.7-4.8-16.1-11.8-21-21-4.8-8.8-7.5-18.9-7.5-29.5s2.7-20.7 7.5-29.5c4.8-8.7 11.8-16.1 21-21 8.8-4.8 18.9-7.5 29.5-7.5z' fill='%234a7c66' fill-opacity='0.1'/%3E%3C/svg%3E");
+        }
+
+        .card-leaf {
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0c-13.3 0-25.9 3.4-36.9 9.4-10.9 6-19.9 15-25.9 25.9-6 11-9.4 23.6-9.4 36.9s3.4 25.9 9.4 36.9c6 10.9 15 19.9 25.9 25.9 11 6 23.6 9.4 36.9 9.4s25.9-3.4 36.9-9.4c10.9-6 19.9-15 25.9-25.9 6-11 9.4-23.6 9.4-36.9s-3.4-25.9-9.4-36.9c-6-10.9-15-19.9-25.9-25.9-11-6-23.6-9.4-36.9-9.4zm0 10c10.6 0 20.7 2.7 29.5 7.5 8.7 4.8 16.1 11.8 21 20 4.8 8.8 7.5 18.9 7.5 29.5s-2.7 20.7-7.5 29.5c-4.8 8.7-11.8 16.1-21 21-8.8 4.8-18.9 7.5-29.5 7.5s-20.7-2.7-29.5-7.5c-8.7-4.8-16.1-11.8-21-21-4.8-8.8-7.5-18.9-7.5-29.5s2.7-20.7 7.5-29.5c4.8-8.7 11.8-16.1 21-21 8.8-4.8 18.9-7.5 29.5-7.5z' fill='%234a7c66' fill-opacity='0.1'/%3E%3C/svg%3E") no-repeat;
+            background-size: 100%;
+        }
+
+        .card-leaf::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 100%);
+        }
+
+        .logo-pattern {
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(74, 124, 102, 0.05) 20px,
+                rgba(74, 124, 102, 0.05) 40px
+            );
+        }
+    </style>
 </head>
 <body>
 @extends('layouts.app')
