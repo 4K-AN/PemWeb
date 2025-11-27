@@ -197,12 +197,12 @@
                         
                         <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
                             <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">1</div>
-                            <span class="text-left text-sm font-medium">Hari Perempuan Internasional</span>
+                            <span class="text-left text-sm font-medium">KOSTRAD (Komando Strategis Angkatan Darat)</span>
                         </div>
 
                         <div class="bg-[#5a8c76] text-white rounded-2xl p-4 flex items-center gap-4 shadow-lg transform hover:scale-105 transition duration-300">
                             <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</div>
-                            <span class="text-left text-sm font-medium">Beasiswa Bakti Madiun Selatan</span>
+                            <span class="text-left text-sm font-medium">Pengumuman Seleksi Mandiri UGM</span>
                         </div>
 
                     </div>

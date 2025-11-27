@@ -22,3 +22,12 @@ Route::get('/kalender-akademik', [AkademikController::class, 'index'])
 
 Route::get('/kalender-akademik/day/{day}', [AkademikController::class, 'detail'])
     ->name('akademik.detail');
+
+Route::get('/simulasi-karir/{slug}', [KarirController::class, 'show'])->name('karir.show');
+
+
+// Route untuk halaman utama (Daftar Profesi)
+Route::get('/karir/simulasi', [KarirController::class, 'index'])->name('karir.simulasi');
+
+// Route untuk halaman detail profesi (Dynamic Slug)
+Route::get('/karir/{slug}', [KarirController::class, 'show'])->name('karir.show');
