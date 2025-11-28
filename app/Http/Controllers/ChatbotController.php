@@ -62,7 +62,6 @@ class ChatbotController extends Controller
 
         if ($isAskingRecommendation) {
 
-            // INSTRUKSI REROLL YANG LEBIH TEGAS
             $rerollPrompt = "";
             if ($isReroll || !empty($suggestedMajors)) {
                 $rerollPrompt = "

@@ -9,7 +9,7 @@ use App\Http\Controllers\KarirController;
 use App\Http\Controllers\AkademikController;
 use Illuminate\Support\Facades\Http;
 
-// Home Route - Mengarah ke halaman home baru
+// Home Route
 Route::get('/', function () {
     return view('home_edvizo');
 })->name('home');
@@ -19,14 +19,14 @@ Route::get('/home', function () {
     return view('home_edvizo');
 });
 
-// Auth Routes - Login tetap tidak berubah
+// Auth Routes
 Route::get('/login-edvizo', function () {
     return view('login_edvizo');
 })->name('login');
 
 Route::post('/login-edvizo/action', [LoginController::class, 'authenticate'])->name('login.action');
 
-// Auth Routes - Register tetap tidak berubah
+// Auth Routes
 Route::get('/register-edvizo', [RegisterController::class, 'show'])->name('register');
 
 Route::post('/register-edvizo/action', [RegisterController::class, 'process'])->name('register.action');
@@ -34,7 +34,7 @@ Route::post('/register-edvizo/action', [RegisterController::class, 'process'])->
 // Logout Route
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Chatbot Routes - Tidak berubah
+// Chatbot Routes
 Route::get('/konsultasi-jurusan', [ChatbotController::class, 'index'])->name('chatbot.index');
 Route::post('/konsultasi-jurusan/send', [ChatbotController::class, 'sendMessage'])->name('chatbot.send');
 
