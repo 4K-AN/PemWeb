@@ -7,6 +7,8 @@ use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\KarirController;
 use App\Http\Controllers\AkademikController;
+use App\Http\Controllers\TryoutController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Http;
 
 // Home Route
@@ -49,11 +51,24 @@ Route::get('/debug-gemini', function () {
 // Beasiswa Routes
 Route::get('/info-beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show'])->name('beasiswa.show');
-Route::get('/beasiswa-search', [BeasiswaController::class, 'search'])->name('beasiswa.search');
+
+// Tryout Routes
+Route::get('/info-tryout', [TryoutController::class, 'index'])->name('tryout.index');
+Route::get('/tryout/{id}', [TryoutController::class, 'show'])->name('tryout.show');
+
+// Profile Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 // Kalender Akademik Routes
 Route::get('/kalender-akademik', [AkademikController::class, 'index'])->name('akademik.kalender');
-Route::get('/kalender-akademik/{day}', [AkademikController::class, 'detail'])->name('akademik.kalender.detail');
+Route::get('/kalender-akademik/tanggal/{day}', [AkademikController::class, 'detail'])->name('akademik.kalender.detail');
+Route::get('/kalender-akademik/event/{id}', [AkademikController::class, 'showEvent'])->name('akademik.event.show');
+Route::post('/kalender-akademik/event/{id}/reminder', [AkademikController::class, 'setReminder'])->name('akademik.event.reminder');
+Route::delete('/kalender-akademik/event/{id}/reminder', [AkademikController::class, 'removeReminder'])->name('akademik.event.reminder.remove');
 
 // Simulasi Karir Routes
 Route::get('/simulasi-karir', [KarirController::class, 'index'])->name('simulasi.karir');

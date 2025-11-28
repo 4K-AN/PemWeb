@@ -19,6 +19,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'address',
+        'date_of_birth',
+        'gender',
+        'school',
     ];
 
     /**
@@ -49,5 +54,10 @@ class User extends Authenticatable
     public function latestFixation()
     {
         return $this->fixations()->latest()->first();
+    }
+
+    public function eventReminders()
+    {
+        return $this->hasMany(EventReminder::class);
     }
 }

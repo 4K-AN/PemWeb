@@ -9,24 +9,40 @@ class BeasiswaController extends Controller
 {
     public function index(Request $request)
     {
-        // Beasiswa terbaru
-        $beasiswaTerbaru = Beasiswa::query()
-            ->byJurusan($request->jurusan)
-            ->byStatus($request->status)
-            ->byJenjang($request->jenjang)
-            ->latest()
-            ->take(3)
-            ->get();
+        $query = Beasiswa::query();
 
-        // Beasiswa populer
-        $beasiswaPopuler = Beasiswa::where('is_popular', true)
-            ->byJurusan($request->jurusan)
-            ->byStatus($request->status)
-            ->byJenjang($request->jenjang)
-            ->take(3)
-            ->get();
+        // Filter berdasarkan kategori
+        if ($request->has('kategori') && $request->kategori != '') {
+            $query->where('kategori', $request->kategori);
+        }
 
-        return view('beasiswa.index', compact('beasiswaTerbaru', 'beasiswaPopuler'));
+        // Filter berdasarkan negara
+        if ($request->has('negara') && $request->negara != '') {
+            $query->where('negara', $request->negara);
+        }
+
+        // Search
+        if ($request->has('q') && $request->q != '') {
+            $query->where(function($q) use ($request) {
+                $q->where('nama_beasiswa', 'like', '%' . $request->q . '%')
+                  ->orWhere('universitas', 'like', '%' . $request->q . '%')
+                  ->orWhere('jurusan', 'like', '%' . $request->q . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $request->q . '%');
+            });
+        }
+
+        // Sorting
+        $sortBy = $request->get('sort', 'created_at');
+        $sortOrder = $request->get('order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+
+        $beasiswas = $query->paginate(12);
+
+        // Data untuk filter dropdown
+        $kategoris = Beasiswa::select('kategori')->distinct()->whereNotNull('kategori')->pluck('kategori');
+        $negaras = Beasiswa::select('negara')->distinct()->pluck('negara');
+
+        return view('beasiswa.index', compact('beasiswas', 'kategoris', 'negaras'));
     }
 
     public function show($id)
@@ -37,37 +53,6 @@ class BeasiswaController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->get('q');
-        
-        // Jika query kosong, redirect
-        if (empty($query)) {
-            return redirect()->route('beasiswa.index');
-        }
-        
-        // Search dan ambil unique berdasarkan nama
-        $beasiswas = Beasiswa::where('nama', 'like', '%' . $query . '%')
-            ->orWhere('universitas', 'like', '%' . $query . '%')
-            ->orWhere('jurusan', 'like', '%' . $query . '%')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->unique('nama') // Hapus duplikat
-            ->values();
-
-        // Manual pagination
-        $perPage = 9;
-        $currentPage = request()->get('page', 1);
-        $offset = ($currentPage - 1) * $perPage;
-        
-        $paginatedItems = $beasiswas->slice($offset, $perPage)->values();
-        
-        $beasiswas = new \Illuminate\Pagination\LengthAwarePaginator(
-            $paginatedItems,
-            $beasiswas->count(),
-            $perPage,
-            $currentPage,
-            ['path' => request()->url(), 'query' => request()->query()]
-        );
-
-        return view('beasiswa.search', compact('beasiswas', 'query'));
+        return $this->index($request);
     }
 }

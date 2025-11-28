@@ -190,6 +190,18 @@
                     </div>
                 </div>
 
+                <!-- Tombol ke Simulasi Karir -->
+                <div class="bg-gradient-to-r from-[#3B8773] to-[#2E6B5B] rounded-2xl p-8 text-center text-white">
+                    <h3 class="text-2xl font-bold mb-3">Lihat Karir yang Cocok untuk Anda</h3>
+                    <p class="text-gray-200 mb-6">Berdasarkan jurusan yang sudah difiksasi, temukan berbagai pilihan karir yang sesuai dengan minat dan kemampuan Anda</p>
+                    <a href="{{ route('simulasi.karir') }}" class="inline-flex items-center gap-2 bg-white text-[#3B8773] px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Mulai Simulasi Karir
+                    </a>
+                </div>
+
                 <div class="flex justify-center pt-8">
                     <button onclick="switchTab('chat')" class="text-[#3B8773] font-semibold hover:text-[#2A6E5C] flex items-center gap-2 transition px-6 py-3 rounded-full hover:bg-green-50">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>

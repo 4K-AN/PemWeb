@@ -16,14 +16,22 @@
         <!-- Calendar Navigation -->
         <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 border border-gray-100">
             <div class="flex items-center justify-between mb-8">
-                <h2 class="text-3xl font-bold text-gray-900">{{ \Carbon\Carbon::now()->translatedFormat('F Y') }}</h2>
+                <h2 class="text-3xl font-bold text-gray-900">
+                    {{ \Carbon\Carbon::createFromDate($year, $month, 1)->translatedFormat('F Y') }}
+                </h2>
                 <div class="flex gap-4">
-                    <button class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-[#E8F5F3] hover:text-[#3B8773] transition font-medium">
-                        ← Bulan Sebelumnya
-                    </button>
-                    <button class="px-6 py-2.5 bg-[#3B8773] text-white rounded-lg hover:bg-[#2E6B5B] transition font-medium">
-                        Bulan Berikutnya →
-                    </button>
+                    @php
+                        $prevMonth = \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth();
+                        $nextMonth = \Carbon\Carbon::createFromDate($year, $month, 1)->addMonth();
+                    @endphp
+                    <a href="{{ route('akademik.kalender', ['year' => $prevMonth->year, 'month' => $prevMonth->month]) }}"
+                       class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-[#E8F5F3] hover:text-[#3B8773] transition font-medium">
+                        Bulan Sebelumnya
+                    </a>
+                    <a href="{{ route('akademik.kalender', ['year' => $nextMonth->year, 'month' => $nextMonth->month]) }}"
+                       class="px-6 py-2.5 bg-[#3B8773] text-white rounded-lg hover:bg-[#2E6B5B] transition font-medium">
+                        Bulan Berikutnya
+                    </a>
                 </div>
             </div>
 
@@ -43,26 +51,39 @@
                     </thead>
                     <tbody>
                         @php
-                            $now = \Carbon\Carbon::now();
-                            $firstDay = $now->copy()->startOfMonth();
-                            $lastDay = $now->copy()->endOfMonth();
+                            $firstDay = \Carbon\Carbon::createFromDate($year, $month, 1);
+                            $lastDay = $firstDay->copy()->endOfMonth();
                             $startWeek = $firstDay->copy()->startOfWeek();
                             $endWeek = $lastDay->copy()->endOfWeek();
+
+                            $eventsByDate = $events->groupBy(function($event) {
+                                return $event->event_date->format('Y-m-d');
+                            });
                         @endphp
 
-                        @for ($date = $startWeek; $date <= $endWeek; $date->addDay())
+                        @for ($date = $startWeek->copy(); $date <= $endWeek; $date->addDay())
                             @if ($date->isMonday())
                                 <tr>
                             @endif
 
-                            <td class="px-4 py-6 border border-gray-100 hover:bg-[#F0F9F7] transition">
-                                @if ($date->month == $now->month)
-                                    <a href="{{ route('akademik.kalender.detail', $date->day) }}" class="block">
+                            @php
+                                $hasEvent = isset($eventsByDate[$date->format('Y-m-d')]);
+                                $isCurrentMonth = $date->month == $month;
+                            @endphp
+
+                            <td class="px-4 py-6 border border-gray-100 {{ $hasEvent && $isCurrentMonth ? 'bg-[#F0F9F7]' : '' }} hover:bg-[#E8F5F3] transition relative">
+                                @if ($isCurrentMonth)
+                                    <a href="{{ route('akademik.kalender.detail', ['day' => $date->day, 'year' => $year, 'month' => $month]) }}" class="block">
                                         <div class="text-sm font-bold mb-2 {{ $date->isToday() ? 'text-[#3B8773]' : 'text-gray-700' }}">
                                             {{ $date->day }}
                                         </div>
-                                        @if ($date->isToday())
-                                            <div class="inline-block w-2 h-2 bg-[#3B8773] rounded-full"></div>
+                                        @if ($hasEvent)
+                                            <div class="flex items-center justify-center gap-1">
+                                                <div class="w-2 h-2 bg-[#3B8773] rounded-full"></div>
+                                                <span class="text-xs text-[#3B8773] font-medium">
+                                                    {{ count($eventsByDate[$date->format('Y-m-d')]) }} acara
+                                                </span>
+                                            </div>
                                         @endif
                                     </a>
                                 @else
@@ -83,130 +104,47 @@
         <section>
             <div class="flex items-center gap-3 mb-8">
                 <div class="w-2 h-8 bg-gradient-to-b from-[#3B8773] to-[#7FD4C4] rounded-full"></div>
-                <h2 class="text-3xl font-bold text-gray-900">Acara Akademik</h2>
+                <h2 class="text-3xl font-bold text-gray-900">Acara Bulan Ini</h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Event Card 1 -->
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-12 h-12 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-xl">
-                            📚
-                        </div>
-                        <span class="text-xs font-bold text-white bg-[#3B8773] px-3 py-1 rounded-full">
-                            Penting
-                        </span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Pendaftaran Siswa Baru</h3>
-                    <p class="text-sm text-gray-600 mb-4">Periode pendaftaran siswa baru untuk tahun akademik berikutnya</p>
-                    <div class="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                        <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        1 - 15 Januari 2025
-                    </div>
+            @if($events->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($events as $event)
+                        <a href="{{ route('akademik.event.show', $event->id) }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-12 h-12 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-xl">
+                                    @php
+                                        $categoryIcons = [
+                                            'Pendaftaran' => '📝',
+                                            'Akademik' => '🎓',
+                                            'Pembelajaran' => '📚',
+                                            'Ujian' => '✏️',
+                                            'Liburan' => '🌴',
+                                            'Pengumuman' => '📢',
+                                        ];
+                                    @endphp
+                                    {{ $categoryIcons[$event->category] ?? '📅' }}
+                                </div>
+                                <span class="text-xs font-bold text-white bg-[#3B8773] px-3 py-1 rounded-full">
+                                    {{ $event->category }}
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">{{ $event->title }}</h3>
+                            <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ $event->description }}</p>
+                            <div class="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                                <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ $event->event_date->translatedFormat('d F Y') }}
+                            </div>
+                        </a>
+                    @endforeach
                 </div>
-
-                <!-- Event Card 2 -->
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-12 h-12 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-xl">
-                            🎓
-                        </div>
-                        <span class="text-xs font-bold text-white bg-blue-500 px-3 py-1 rounded-full">
-                            Akademik
-                        </span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Orientasi Siswa</h3>
-                    <p class="text-sm text-gray-600 mb-4">Program pengenalan sekolah dan lingkungan akademik untuk siswa baru</p>
-                    <div class="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                        <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        18 - 20 Januari 2025
-                    </div>
+            @else
+                <div class="bg-white rounded-2xl p-12 text-center border-2 border-dashed border-gray-200">
+                    <p class="text-gray-500 font-medium">Tidak ada acara akademik bulan ini</p>
                 </div>
-
-                <!-- Event Card 3 -->
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-12 h-12 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-xl">
-                            📖
-                        </div>
-                        <span class="text-xs font-bold text-white bg-green-500 px-3 py-1 rounded-full">
-                            Pembelajaran
-                        </span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Dimulai Tahun Ajaran Baru</h3>
-                    <p class="text-sm text-gray-600 mb-4">Hari pertama kegiatan belajar mengajar tahun ajaran 2024/2025</p>
-                    <div class="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                        <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        21 Januari 2025
-                    </div>
-                </div>
-
-                <!-- Event Card 4 -->
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-12 h-12 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-xl">
-                            ✏️
-                        </div>
-                        <span class="text-xs font-bold text-white bg-yellow-500 px-3 py-1 rounded-full">
-                            Ujian
-                        </span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Ujian Semester Gasal</h3>
-                    <p class="text-sm text-gray-600 mb-4">Pelaksanaan ujian akhir semester untuk semua mata pelajaran</p>
-                    <div class="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                        <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        1 - 15 Desember 2024
-                    </div>
-                </div>
-
-                <!-- Event Card 5 -->
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-12 h-12 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-xl">
-                            🎉
-                        </div>
-                        <span class="text-xs font-bold text-white bg-purple-500 px-3 py-1 rounded-full">
-                            Liburan
-                        </span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Liburan Semester</h3>
-                    <p class="text-sm text-gray-600 mb-4">Masa istirahat untuk siswa setelah selesai mengikuti ujian semester</p>
-                    <div class="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                        <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        16 Desember 2024 - 5 Januari 2025
-                    </div>
-                </div>
-
-                <!-- Event Card 6 -->
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-12 h-12 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-xl">
-                            📊
-                        </div>
-                        <span class="text-xs font-bold text-white bg-red-500 px-3 py-1 rounded-full">
-                            Pengumuman
-                        </span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#3B8773] transition">Pengumuman Nilai Semester</h3>
-                    <p class="text-sm text-gray-600 mb-4">Pengumuman hasil nilai akhir untuk semua siswa tahun akademik ini</p>
-                    <div class="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                        <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        20 Desember 2024
-                    </div>
-                </div>
-            </div>
+            @endif
         </section>
     </div>
 </div>

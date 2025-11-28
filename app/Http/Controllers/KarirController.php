@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Fixation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class KarirController extends Controller
 {
@@ -13,183 +15,317 @@ class KarirController extends Controller
     {
         // Cek apakah user sudah login
         if (!Auth::check()) {
-            return view('karir.Fiksasi.simulasi.index', ['fixation' => null]);
+            return view('karir.Fiksasi.simulasi.index', ['fixation' => null, 'careers' => [], 'error' => null]);
         }
 
         // Ambil fiksasi terbaru user
         $fixation = Auth::user()->latestFixation();
+        $careers = [];
+        $error = null;
 
-        // Jika ada fiksasi, tampilkan karir yang sesuai dengan jurusan
-        return view('karir.Fiksasi.simulasi.index', ['fixation' => $fixation]);
+        // Jika ada fiksasi, ambil rekomendasi karir dari AI
+        if ($fixation) {
+            \Log::info('=== KARIR CONTROLLER START ===');
+            \Log::info('User ID: ' . Auth::id());
+            \Log::info('Fixation ID: ' . $fixation->id);
+            \Log::info('Jurusan: ' . $fixation->jurusan);
+
+            $result = $this->getAICareers($fixation);
+
+            if (isset($result['error'])) {
+                $error = $result['error'];
+                \Log::error('Error dari getAICareers: ' . $error);
+            } else {
+                $careers = $result['careers'] ?? [];
+                \Log::info('Total careers returned: ' . count($careers));
+            }
+
+            \Log::info('=== KARIR CONTROLLER END ===');
+        } else {
+            \Log::warning('No fixation found for user: ' . Auth::id());
+        }
+
+        // Tampilkan halaman dengan data fiksasi dan karir
+        return view('karir.Fiksasi.simulasi.index', [
+            'fixation' => $fixation,
+            'careers' => $careers,
+            'error' => $error
+        ]);
+    }
+
+    // Fungsi untuk mengambil rekomendasi karir dari AI
+    private function getAICareers($fixation)
+    {
+        try {
+            $cacheKey = 'ai_careers_' . $fixation->id;
+
+            // JANGAN HAPUS CACHE - Sudah benar!
+            if (Cache::has($cacheKey)) {
+                \Log::info('Returning careers from cache');
+                return ['careers' => Cache::get($cacheKey)];
+            }
+
+            \Log::info('Cache not found, calling AI...');
+
+            $apiKey = env('GEMINI_API_KEY');
+
+            if (!$apiKey) {
+                \Log::error('GEMINI_API_KEY tidak ditemukan di .env');
+                return ['error' => 'API Key tidak ditemukan. Silakan hubungi administrator.'];
+            }
+
+            \Log::info('API Key found (first 10 chars): ' . substr($apiKey, 0, 10) . '...');
+
+            $prompt = "Kamu adalah konsultan karir profesional. Berdasarkan jurusan '{$fixation->jurusan}' dengan deskripsi '{$fixation->deskripsi}', berikan rekomendasi 6 karir yang paling sesuai.
+
+ATURAN KETAT:
+1. Return HANYA JSON array yang valid
+2. TIDAK ada teks, markdown, atau penjelasan tambahan
+3. Format PERSIS seperti contoh
+
+CONTOH FORMAT YANG BENAR:
+[
+  {
+    \"id\": \"software-engineer\",
+    \"title\": \"Software Engineer\",
+    \"description\": \"Profesional yang merancang, mengembangkan, dan memelihara perangkat lunak untuk berbagai platform dan kebutuhan bisnis.\",
+    \"skills\": [\"Programming (Java/Python/JavaScript)\", \"Database Management\", \"Version Control (Git)\", \"Problem Solving\"],
+    \"salary\": \"Rp 8.000.000 - Rp 25.000.000\",
+    \"career_path\": [\"Junior Developer (0-2 tahun)\", \"Mid Developer (3-5 tahun)\", \"Senior Developer (5-8 tahun)\", \"Tech Lead (8+ tahun)\"],
+    \"relevance\": \"Sangat cocok untuk lulusan {$fixation->jurusan} karena membutuhkan pemahaman teknis dan kemampuan problem solving yang kuat.\"
+  }
+]
+
+PENTING:
+- Berikan 6 karir BERBEDA yang relevan dengan {$fixation->jurusan}
+- ID harus lowercase, pisahkan dengan dash (-)
+- Skills maksimal 4 item
+- Career path maksimal 4 level
+- Salary dalam format Rupiah Indonesia
+- Description 1-2 kalimat saja
+- Relevance jelaskan mengapa cocok untuk jurusan ini
+
+Return HANYA JSON array:";
+
+            \Log::info('Calling Gemini API...');
+            \Log::info('Prompt length: ' . strlen($prompt) . ' characters');
+
+            $response = Http::withoutVerifying()->timeout(60)->post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}",
+                [
+                    'contents' => [['parts' => [['text' => $prompt]]]],
+                    'generationConfig' => [
+                        'temperature' => 0.3,
+                        'topK' => 40,
+                        'topP' => 0.95,
+                        'maxOutputTokens' => 4096,
+                    ]
+                ]
+            );
+
+            \Log::info('API Response Status: ' . $response->status());
+
+            if (!$response->successful()) {
+                $errorBody = $response->body();
+                \Log::error('Gemini API Error: ' . $response->status());
+                \Log::error('Error Body: ' . $errorBody);
+                return ['error' => 'API Error: ' . $response->status() . '. Cek log untuk detail.'];
+            }
+
+            $result = $response->json();
+            \Log::info('Response structure: ' . json_encode(array_keys($result)));
+
+            if (!isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+                \Log::error('AI response structure invalid');
+                \Log::error('Full response: ' . json_encode($result));
+                return ['error' => 'Format response AI tidak valid. Cek log untuk detail.'];
+            }
+
+            $text = $result['candidates'][0]['content']['parts'][0]['text'];
+            \Log::info('Raw AI response length: ' . strlen($text) . ' characters');
+            \Log::info('First 200 chars: ' . substr($text, 0, 200));
+
+            // Cleaning process
+            $text = trim($text);
+            $text = preg_replace('/^```json\s*/i', '', $text);
+            $text = preg_replace('/^```\s*/i', '', $text);
+            $text = preg_replace('/\s*```\s*$/i', '', $text);
+            $text = trim($text);
+
+            \Log::info('After cleaning, first 200 chars: ' . substr($text, 0, 200));
+
+            // Extract JSON array
+            if (preg_match('/\[[\s\S]*\]/m', $text, $matches)) {
+                $text = $matches[0];
+                \Log::info('JSON extracted successfully');
+            } else {
+                \Log::error('Could not extract JSON array from text');
+                \Log::error('Full text: ' . $text);
+                return ['error' => 'Tidak dapat mengekstrak JSON dari response AI.'];
+            }
+
+            $careers = json_decode($text, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                \Log::error('JSON Parse Error: ' . json_last_error_msg());
+                \Log::error('JSON Error Code: ' . json_last_error());
+                \Log::error('Problematic JSON (first 500 chars): ' . substr($text, 0, 500));
+                return ['error' => 'Error parsing JSON: ' . json_last_error_msg()];
+            }
+
+            \Log::info('JSON decoded successfully. Career count: ' . count($careers));
+
+            if (!is_array($careers) || count($careers) < 3) {
+                \Log::warning('AI returned less than 3 careers: ' . count($careers));
+                return ['error' => 'AI hanya mengembalikan ' . count($careers) . ' karir (minimal 3 diperlukan).'];
+            }
+
+            // Validate and clean data
+            $validCareers = [];
+            foreach ($careers as $index => $career) {
+                \Log::info("Validating career #{$index}: " . ($career['title'] ?? 'no title'));
+
+                if (isset($career['id'], $career['title'], $career['description'],
+                          $career['skills'], $career['salary'], $career['career_path'])) {
+
+                    $career['id'] = strtolower(trim(preg_replace('/[^a-z0-9-]/', '-', $career['id'])));
+                    $validCareers[] = $career;
+                    \Log::info("Career #{$index} is valid");
+                } else {
+                    \Log::warning("Career #{$index} is invalid. Missing fields.");
+                }
+            }
+
+            \Log::info('Valid careers count: ' . count($validCareers));
+
+            if (count($validCareers) >= 3) {
+                Cache::put($cacheKey, $validCareers, 86400);
+                \Log::info('Careers cached successfully');
+                return ['careers' => $validCareers];
+            }
+
+            return ['error' => 'Hanya ' . count($validCareers) . ' karir valid dari total ' . count($careers) . ' karir.'];
+
+        } catch (\Exception $e) {
+            \Log::error('EXCEPTION in getAICareers');
+            \Log::error('Message: ' . $e->getMessage());
+            \Log::error('File: ' . $e->getFile() . ':' . $e->getLine());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return ['error' => 'Error: ' . $e->getMessage()];
+        }
     }
 
     // Fungsi untuk halaman Detail
     public function show($slug)
     {
-        // DATA LENGKAP UNTUK SEMUA PROFESI
-        $jobs = [
-            'software-engineer' => [
-                'title' => 'Software Engineer / Developer',
-                'icon' => '💻',
-                'description' => 'Software Engineer bertanggung jawab merancang, mengembangkan, dan memelihara perangkat lunak. Mereka menulis kode yang bersih, efisien, dan dapat diuji untuk membangun aplikasi web, mobile, atau desktop.',
-                'skills' => [
-                    'HTML, CSS, JavaScript (Frontend)',
-                    'PHP/Laravel, Node.js, atau Java (Backend)',
-                    'Database Management (SQL/NoSQL)',
-                    'Version Control (Git)',
-                    'System Architecture Design'
-                ],
-                'salary' => 'Rp 8.000.000 - Rp 25.000.000',
-                'career_path' => [
-                    'Junior Developer (0-2 tahun)',
-                    'Mid Developer (3-5 tahun)',
-                    'Senior Developer (5-8 tahun)',
-                    'Tech Lead / Engineering Manager (8+ tahun)'
-                ]
-            ],
-            'data-scientist' => [
-                'title' => 'Data Scientist / Data Analyst',
-                'icon' => '📊',
-                'description' => 'Data Scientist menganalisis data untuk menghasilkan insight bisnis. Mereka menggunakan statistik, machine learning, dan visualisasi data untuk membantu perusahaan membuat keputusan berbasis data.',
-                'skills' => [
-                    'Python / R untuk analisis data',
-                    'SQL untuk query database',
-                    'Statistics & Probability',
-                    'Data Visualization (Tableau, Power BI)',
-                    'Machine Learning Basics'
-                ],
-                'salary' => 'Rp 10.000.000 - Rp 30.000.000',
-                'career_path' => [
-                    'Junior Data Analyst (0-2 tahun)',
-                    'Data Analyst (2-4 tahun)',
-                    'Data Scientist (4-7 tahun)',
-                    'Lead Data Scientist (7+ tahun)'
-                ]
-            ],
-            'cloud-engineer' => [
-                'title' => 'Cloud Engineer / DevOps Engineer',
-                'icon' => '☁️',
-                'description' => 'Cloud Engineer mengelola infrastruktur cloud dan memastikan aplikasi berjalan dengan efisien. Mereka mengotomatisasi deployment, monitoring, dan scaling aplikasi menggunakan teknologi cloud modern.',
-                'skills' => [
-                    'AWS / Google Cloud / Azure',
-                    'Docker & Kubernetes',
-                    'CI/CD Pipeline (Jenkins, GitLab CI)',
-                    'Infrastructure as Code (Terraform)',
-                    'Linux System Administration'
-                ],
-                'salary' => 'Rp 12.000.000 - Rp 35.000.000',
-                'career_path' => [
-                    'Junior DevOps (0-2 tahun)',
-                    'DevOps Engineer (2-5 tahun)',
-                    'Senior DevOps (5-8 tahun)',
-                    'DevOps Architect (8+ tahun)'
-                ]
-            ],
-            'cybersecurity' => [
-                'title' => 'Cybersecurity Specialist',
-                'icon' => '🔒',
-                'description' => 'Cybersecurity Specialist melindungi sistem dan data dari serangan cyber. Mereka mengidentifikasi kerentanan, melakukan penetration testing, dan mengimplementasikan security best practices.',
-                'skills' => [
-                    'Network Security & Firewalls',
-                    'Penetration Testing',
-                    'Security Tools (Nmap, Wireshark, Metasploit)',
-                    'Cryptography',
-                    'Security Compliance (ISO 27001)'
-                ],
-                'salary' => 'Rp 10.000.000 - Rp 40.000.000',
-                'career_path' => [
-                    'Junior Security Analyst (0-2 tahun)',
-                    'Security Engineer (2-5 tahun)',
-                    'Senior Security Engineer (5-8 tahun)',
-                    'Security Architect (8+ tahun)'
-                ]
-            ],
-            'ai-engineer' => [
-                'title' => 'AI Engineer / Machine Learning Engineer',
-                'icon' => '🤖',
-                'description' => 'AI Engineer mengembangkan sistem yang mampu belajar dan berpikir seperti manusia menggunakan algoritma pembelajaran mesin. Mereka membangun model yang dapat melakukan klasifikasi, prediksi, hingga pengenalan gambar dan suara.',
-                'skills' => [
-                    'Python (TensorFlow, PyTorch, Scikit-learn)',
-                    'Data Preprocessing & Feature Engineering',
-                    'Linear Algebra & Calculus',
-                    'Model Deployment (ML Ops)',
-                    'Big Data Tools (Spark, Hadoop)'
-                ],
-                'salary' => 'Rp 15.000.000 - Rp 50.000.000',
-                'career_path' => [
-                    'Junior ML Engineer (0-2 tahun)',
-                    'ML Engineer (2-5 tahun)',
-                    'Senior ML Engineer (5-8 tahun)',
-                    'ML Architect / Research Scientist (8+ tahun)'
-                ]
-            ],
-            'uiux-designer' => [
-                'title' => 'UI/UX Designer (Tech-Oriented)',
-                'icon' => '🎨',
-                'description' => 'UI/UX Designer merancang pengalaman pengguna yang intuitif dan menarik. Mereka menggabungkan psikologi, desain visual, dan pemahaman teknis untuk menciptakan interface yang user-friendly.',
-                'skills' => [
-                    'Figma / Adobe XD / Sketch',
-                    'User Research & Usability Testing',
-                    'Wireframing & Prototyping',
-                    'HTML/CSS Basics',
-                    'Design Systems & Component Libraries'
-                ],
-                'salary' => 'Rp 7.000.000 - Rp 25.000.000',
-                'career_path' => [
-                    'Junior UI/UX Designer (0-2 tahun)',
-                    'UI/UX Designer (2-5 tahun)',
-                    'Senior UI/UX Designer (5-8 tahun)',
-                    'Lead Designer / Design Manager (8+ tahun)'
-                ]
-            ],
-            'product-manager' => [
-                'title' => 'Product Manager (Tech Product)',
-                'icon' => '📱',
-                'description' => 'Product Manager memimpin pengembangan produk dari ide hingga peluncuran. Mereka menggabungkan pemahaman bisnis, teknis, dan user needs untuk menciptakan produk yang sukses di pasar.',
-                'skills' => [
-                    'Product Strategy & Roadmapping',
-                    'User Story & Requirements Writing',
-                    'Data Analysis & Metrics',
-                    'Technical Understanding (APIs, Databases)',
-                    'Stakeholder Management'
-                ],
-                'salary' => 'Rp 15.000.000 - Rp 45.000.000',
-                'career_path' => [
-                    'Associate Product Manager (0-2 tahun)',
-                    'Product Manager (2-5 tahun)',
-                    'Senior Product Manager (5-8 tahun)',
-                    'Director of Product (8+ tahun)'
-                ]
-            ],
-            'fullstack-developer' => [
-                'title' => 'Full Stack Developer',
-                'icon' => '🌐',
-                'description' => 'Full Stack Developer menguasai frontend dan backend development. Mereka dapat membangun aplikasi web lengkap dari database hingga user interface.',
-                'skills' => [
-                    'Frontend (React, Vue, atau Angular)',
-                    'Backend (Node.js, PHP, Python)',
-                    'Database Design & Management',
-                    'RESTful API Development',
-                    'Deployment & Hosting'
-                ],
-                'salary' => 'Rp 10.000.000 - Rp 30.000.000',
-                'career_path' => [
-                    'Junior Full Stack (0-2 tahun)',
-                    'Full Stack Developer (2-5 tahun)',
-                    'Senior Full Stack (5-8 tahun)',
-                    'Tech Lead (8+ tahun)'
-                ]
-            ],
-        ];
-
-        // CEK APAKAH SLUG ADA DI DATA
-        if (!array_key_exists($slug, $jobs)) {
-            abort(404);
+        // Cek apakah user sudah login
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
 
-        // KIRIM DATA KE VIEW - PERHATIKAN NAMA FILE: detail1.blade.php
-        return view('karir.Fiksasi.simulasi.detail', [
-            'job' => $jobs[$slug]
-        ]);
+        // Ambil fiksasi terbaru user
+        $fixation = Auth::user()->latestFixation();
+
+        // Jika tidak ada fiksasi, redirect ke halaman simulasi karir
+        if (!$fixation) {
+            return redirect()->route('simulasi.karir');
+        }
+
+        try {
+            // Cari dari list careers dulu
+            $result = $this->getAICareers($fixation);
+
+            // FIX: Check if error or careers
+            if (isset($result['error'])) {
+                abort(404, 'Error loading careers: ' . $result['error']);
+            }
+
+            $careers = $result['careers'] ?? [];
+
+            // FIX: Use collect on careers array, not result
+            $job = collect($careers)->firstWhere('id', $slug);
+
+            if (!$job) {
+                // Generate detail dari AI
+                $job = $this->getAICareerDetail($fixation, $slug);
+            }
+
+            // Tampilkan halaman detail karir
+            return view('karir.Fiksasi.simulasi.detail', ['job' => $job]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error in show: ' . $e->getMessage());
+            abort(404);
+        }
+    }
+
+    // Fungsi untuk mengambil detail karir dari AI
+    private function getAICareerDetail($fixation, $slug)
+    {
+        try {
+            $apiKey = env('GEMINI_API_KEY');
+            $careerName = ucwords(str_replace('-', ' ', $slug));
+
+            $prompt = "Kamu adalah konsultan karir. Berikan detail lengkap untuk karir '{$careerName}' yang sesuai dengan jurusan '{$fixation->jurusan}'.
+
+ATURAN:
+1. Return HANYA JSON object
+2. TIDAK ada markdown atau teks tambahan
+
+FORMAT:
+{
+  \"title\": \"Nama Karir Profesional\",
+  \"description\": \"Deskripsi lengkap karir ini dalam 3-4 paragraf. Paragraf 1: Penjelasan umum karir. Paragraf 2: Tanggung jawab dan aktivitas harian. Paragraf 3: Prospek dan perkembangan karir. Paragraf 4: Mengapa cocok untuk lulusan {$fixation->jurusan}.\",
+  \"skills\": [\"Skill spesifik 1\", \"Skill spesifik 2\", \"Skill spesifik 3\", \"Skill spesifik 4\", \"Skill spesifik 5\"],
+  \"salary\": \"Rp 8.000.000 - Rp 25.000.000\",
+  \"career_path\": [\"Entry Level (0-2 tahun)\", \"Mid Level (2-5 tahun)\", \"Senior Level (5-8 tahun)\", \"Expert Level (8+ tahun)\"]
+}
+
+Return HANYA JSON object:";
+
+            $response = Http::withoutVerifying()->timeout(30)->post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}",
+                [
+                    'contents' => [['parts' => [['text' => $prompt]]]],
+                    'generationConfig' => [
+                        'temperature' => 0.3,
+                        'maxOutputTokens' => 2048,
+                    ]
+                ]
+            );
+
+            if ($response->successful()) {
+                $result = $response->json();
+
+                if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+                    $text = $result['candidates'][0]['content']['parts'][0]['text'];
+
+                    $text = trim($text);
+                    $text = preg_replace('/^```json\s*/i', '', $text);
+                    $text = preg_replace('/^```\s*/i', '', $text);
+                    $text = preg_replace('/\s*```\s*$/i', '', $text);
+                    $text = trim($text);
+
+                    if (substr($text, 0, 1) !== '{') {
+                        if (preg_match('/(\{[\s\S]*\})/m', $text, $matches)) {
+                            $text = $matches[1];
+                        }
+                    }
+
+                    $job = json_decode($text, true);
+
+                    if (json_last_error() === JSON_ERROR_NONE &&
+                        isset($job['title'], $job['description'], $job['skills'],
+                              $job['salary'], $job['career_path'])) {
+                        return $job;
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
+            \Log::error('AI Detail Error: ' . $e->getMessage());
+        }
+
+        throw new \Exception('Career detail not found');
     }
 }

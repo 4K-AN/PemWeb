@@ -53,7 +53,7 @@ class ChatbotController extends Controller
         }
 
         // --- 3. KONFIGURASI GEMINI ---
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$apiKey}";
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
 
         $contents = [];
         foreach ($history as $chat) {
@@ -114,10 +114,7 @@ class ChatbotController extends Controller
         }
 
         try {
-            $response = Http::withHeaders(['Content-Type' => 'application/json'])
-                ->withoutVerifying()
-                ->timeout(60)
-                ->post($url, $payload);
+            $response = Http::withoutVerifying()->timeout(30)->post($url, $payload);
 
             if ($response->failed()) {
                 return response()->json(['type' => 'text', 'reply' => "Error API: " . $response->body()]);
@@ -162,4 +159,60 @@ class ChatbotController extends Controller
         } catch (\Exception $e) {
             return response()->json(['type' => 'text', 'reply' => "System Error: " . $e->getMessage()]);
         }
-    }}
+    }
+
+    private function handleFixation($message, $conversationHistory)
+    {
+        $apiKey = env('GEMINI_API_KEY');
+
+        if (empty($apiKey)) {
+            return response()->json(['type' => 'text', 'reply' => 'CRITICAL ERROR: API Key kosong.']);
+        }
+
+        // --- 1. AMBIL DATA FIXATION ---
+        $fixation = Fixation::where('user_id', Auth::id())
+            ->where('jurusan', '!=', '')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (empty($fixation)) {
+            return response()->json(['type' => 'text', 'reply' => 'Tidak ada data fixation ditemukan.']);
+        }
+
+        // --- 2. SIAPKAN PROMPT ---
+        $prompt = "Kamu adalah seorang ahli pendidikan. Berdasarkan data berikut:\n\n";
+        $prompt .= "Jurusan: {$fixation->jurusan}\n";
+        $prompt .= "Deskripsi: {$fixation->deskripsi}\n";
+        $prompt .= "Alasan Cocok: {$fixation->alasan_cocok}\n";
+        $prompt .= "SWOT: " . json_encode($fixation->swot) . "\n\n";
+        $prompt .= "Berikan analisis mendalam tentang jurusan ini, termasuk pro dan kontra, serta saran untuk pengembangan diri calon mahasiswa.\n";
+        $prompt .= "Format jawaban dalam bentuk poin-poin yang jelas dan terstruktur.";
+
+        try {
+            $response = Http::withoutVerifying()->timeout(30)->post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}",
+                [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ]
+                ]
+            );
+
+            if ($response->failed()) {
+                return response()->json(['type' => 'text', 'reply' => "Error API: " . $response->body()]);
+            }
+
+            $responseBody = $response->json();
+            $rawReply = $responseBody['candidates'][0]['content']['parts'][0]['text'] ?? '';
+
+            return response()->json(['type' => 'text', 'reply' => $rawReply]);
+
+        } catch (\Exception $e) {
+            return response()->json(['type' => 'text', 'reply' => "System Error: " . $e->getMessage()]);
+        }
+    }
+}

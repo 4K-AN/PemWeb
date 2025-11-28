@@ -144,7 +144,7 @@
 
     <!-- Stats Section -->
     <section class="bg-white py-16 px-6 border-b border-gray-100">
-        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-4 gap-8">
             <div class="text-center p-6 rounded-2xl hover:bg-[#F0F9F7] transition">
                 <div class="text-4xl font-bold text-[#3B8773] mb-2">500+</div>
                 <p class="text-gray-600 font-medium">Jurusan Terdata</p>
@@ -152,6 +152,10 @@
             <div class="text-center p-6 rounded-2xl hover:bg-[#F0F9F7] transition">
                 <div class="text-4xl font-bold text-[#3B8773] mb-2">1000+</div>
                 <p class="text-gray-600 font-medium">Beasiswa Aktif</p>
+            </div>
+            <div class="text-center p-6 rounded-2xl hover:bg-[#F0F9F7] transition">
+                <div class="text-4xl font-bold text-[#3B8773] mb-2">50+</div>
+                <p class="text-gray-600 font-medium">Tryout Tersedia</p>
             </div>
             <div class="text-center p-6 rounded-2xl hover:bg-[#F0F9F7] transition">
                 <div class="text-4xl font-bold text-[#3B8773] mb-2">5000+</div>
@@ -168,7 +172,7 @@
                 <p class="text-gray-600 max-w-2xl mx-auto">Semua yang Anda butuhkan untuk memilih jurusan yang tepat</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
                 <!-- Feature 1 -->
                 <div class="bg-white p-8 rounded-2xl border border-gray-100 hover:shadow-lg hover:border-[#3B8773]/20 transition group">
                     <div class="w-14 h-14 bg-[#E8F5F3] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#3B8773] transition">
@@ -200,6 +204,31 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Info Beasiswa</h3>
                     <p class="text-gray-600 leading-relaxed">Akses database lengkap beasiswa dari berbagai universitas dan lembaga pendidikan.</p>
+                </div>
+            </div>
+
+            <!-- New Features -->
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 hover:shadow-lg hover:border-[#3B8773]/20 transition group">
+                    <div class="w-14 h-14 bg-[#E8F5F3] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#3B8773] transition">
+                        <svg class="w-7 h-7 text-[#3B8773] group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Kalender Akademik</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">Kelola jadwal akademik Anda dengan sistem reminder otomatis.</p>
+                    <a href="{{ route('akademik.kalender') }}" class="text-[#3B8773] font-bold hover:text-[#2E6B5B] transition">Lihat Kalender</a>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 hover:shadow-lg hover:border-[#3B8773]/20 transition group">
+                    <div class="w-14 h-14 bg-[#E8F5F3] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#3B8773] transition">
+                        <svg class="w-7 h-7 text-[#3B8773] group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Info Tryout</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">Temukan tryout dan simulasi ujian untuk persiapan maksimal.</p>
+                    <a href="{{ route('tryout.index') }}" class="text-[#3B8773] font-bold hover:text-[#2E6B5B] transition">Jelajahi Tryout</a>
                 </div>
             </div>
         </div>
