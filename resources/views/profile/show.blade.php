@@ -52,16 +52,23 @@
                             {{ $user->gender == 'male' ? 'Laki-laki' : ($user->gender == 'female' ? 'Perempuan' : '-') }}
                         </p>
                     </div>
-                    <div>
-                        <label class="text-sm font-bold text-gray-500 mb-2 block">Sekolah/Universitas</label>
-                        <p class="text-gray-900 font-medium">{{ $user->school ?? '-' }}</p>
-                    </div>
                 </div>
 
-                <div>
-                    <label class="text-sm font-bold text-gray-500 mb-2 block">Alamat</label>
-                    <p class="text-gray-900 font-medium">{{ $user->address ?? '-' }}</p>
+                @if($user->interests_talents)
+                <div class="mt-8 p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-xl border-2 border-blue-300">
+                    <label class="text-sm font-bold text-blue-900 mb-3 block flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                        📚 Minat & Bakat
+                    </label>
+                    <p class="text-gray-800 leading-relaxed whitespace-pre-wrap">{{ $user->interests_talents }}</p>
                 </div>
+                @else
+                <div class="mt-8 p-6 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
+                    <p class="text-gray-500 italic">Belum ada deskripsi minat dan bakat. Isi di halaman edit profil untuk mendapatkan rekomendasi jurusan yang lebih akurat.</p>
+                </div>
+                @endif
             </div>
         </div>
 

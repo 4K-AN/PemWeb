@@ -72,21 +72,38 @@ class ChatbotController extends Controller
                 ";
             }
 
+            // --- Get user profile data untuk context ---
+            $userContext = "";
+            if (Auth::check()) {
+                $user = Auth::user();
+                if ($user->interests_talents) {
+                    $userContext = "
+                    [DATA PROFIL USER]:
+                    Nama: {$user->name}
+                    Minat & Bakat: {$user->interests_talents}
+                    
+                    Gunakan informasi ini sebagai pertimbangan utama dalam memberikan rekomendasi jurusan yang paling sesuai dengan profil dan potensi user.
+                    ";
+                }
+            }
+
             $systemPrompt = "
             PERAN: Konselor Pendidikan Profesional.
             TUGAS: Berikan 1 rekomendasi jurusan kuliah. $rerollPrompt
 
+            $userContext
+
             ATURAN JSON:
             1. 'jurusan': Nama Jurusan Saja (Tanpa Kampus).
             2. 'deskripsi': Definisi singkat jurusan (apa yang dipelajari).
-            3. 'alasan_cocok': Analisis naratif MENGAPA user cocok (hubungkan sifat user dengan jurusan).
+            3. 'alasan_cocok': Analisis naratif MENGAPA user cocok (hubungkan minat/bakat user dengan jurusan).
 
             FORMAT OUTPUT: JSON MURNI.
             SCHEMA:
             {
                 \"jurusan\": \"Nama Jurusan\",
                 \"deskripsi\": \"Definisi jurusan.\",
-                \"alasan_cocok\": \"Analisis kecocokan personal.\",
+                \"alasan_cocok\": \"Analisis kecocokan berdasarkan minat dan bakat.\",
                 \"swot\": {
                     \"strengths\": [\"Poin 1\", \"Poin 2\"],
                     \"weaknesses\": [\"Poin 1\", \"Poin 2\"],

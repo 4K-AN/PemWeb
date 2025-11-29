@@ -74,23 +74,36 @@
                         @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Sekolah/Universitas</label>
-                        <input type="text" name="school" value="{{ old('school', $user->school) }}"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">
-                        @error('school')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Alamat</label>
-                    <textarea name="address" rows="3"
-                              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">{{ old('address', $user->address) }}</textarea>
-                    @error('address')
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Sekolah/Universitas</label>
+                    <input type="text" name="school" value="{{ old('school', $user->school) }}"
+                           class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">
+                    @error('school')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-8 mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                    </svg>
+                    📚 Minat & Bakat
+                </h2>
+                <p class="text-sm text-gray-600 mb-6">Deskripsikan minat, bakat, dan passion Anda. Informasi ini akan membantu AI chatbot memberikan rekomendasi jurusan yang lebih akurat.</p>
+                
+                <div>
+                    <textarea name="interests_talents" rows="6" placeholder="Contoh: Saya senang dengan matematika dan fisika. Pandai dalam programming dan problem solving. Tertarik dengan robotika dan AI. Suka berkompetisi dan kerja tim..." 
+                              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">{{ old('interests_talents', $user->interests_talents) }}</textarea>
+                    <p class="text-sm text-gray-500 mt-2">Maksimal 1000 karakter</p>
+                    @error('interests_talents')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
+                    <p class="text-sm text-blue-900"><strong>💡 Tips:</strong> Semakin detail dan spesifik Anda mendeskripsikan minat dan bakat, semakin baik rekomendasi jurusan dari chatbot kami!</p>
                 </div>
             </div>
 

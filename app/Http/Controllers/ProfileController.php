@@ -28,10 +28,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'date_of_birth' => 'nullable|date',
-            'gender' => 'nullable|in:male,female',
-            'school' => 'nullable|string|max:255',
+            'interests_talents' => 'nullable|string|max:1000',
             'current_password' => 'nullable|required_with:new_password',
             'new_password' => 'nullable|min:8|confirmed',
         ]);
@@ -50,10 +47,7 @@ class ProfileController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
-            'address' => $validated['address'],
-            'date_of_birth' => $validated['date_of_birth'],
-            'gender' => $validated['gender'],
-            'school' => $validated['school'],
+            'interests_talents' => $validated['interests_talents'],
         ]);
 
         return redirect()->route('profile.show')->with('success', 'Profil berhasil diperbarui!');
