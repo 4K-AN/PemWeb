@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TryoutSeeder::class,
             BeasiswaSeeder::class,
-            AcademicEventSeeder::class, // Jika ada
+            AcademicEventSeeder::class,
         ]);
     }
 }
