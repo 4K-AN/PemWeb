@@ -30,8 +30,7 @@ Route::post('/login-edvizo/action', [LoginController::class, 'authenticate'])->n
 
 // Auth Routes
 Route::get('/register-edvizo', [RegisterController::class, 'show'])->name('register');
-
-Route::post('/register-edvizo/action', [RegisterController::class, 'process'])->name('register.action');
+Route::post('/register-edvizo', [RegisterController::class, 'process'])->name('register.process');
 
 // Logout Route
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
