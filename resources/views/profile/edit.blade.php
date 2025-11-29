@@ -44,43 +44,14 @@
                         @enderror
                     </div>
 
-                    <div>
+                    <div class="md:col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-2">Nomor Telepon</label>
-                        <input type="tel" name="phone" value="{{ old('phone', $user->phone) }}"
+                        <input type="tel" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="Contoh: 08123456789"
                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">
                         @error('phone')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Lahir</label>
-                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $user->date_of_birth) }}"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">
-                        @error('date_of_birth')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Jenis Kelamin</label>
-                        <select name="gender" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">
-                            <option value="">Pilih Jenis Kelamin</option>
-                            <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Perempuan</option>
-                        </select>
-                        @error('gender')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Sekolah/Universitas</label>
-                    <input type="text" name="school" value="{{ old('school', $user->school) }}"
-                           class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">
-                    @error('school')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
                 </div>
             </div>
 
@@ -92,9 +63,9 @@
                     📚 Minat & Bakat
                 </h2>
                 <p class="text-sm text-gray-600 mb-6">Deskripsikan minat, bakat, dan passion Anda. Informasi ini akan membantu AI chatbot memberikan rekomendasi jurusan yang lebih akurat.</p>
-                
+
                 <div>
-                    <textarea name="interests_talents" rows="6" placeholder="Contoh: Saya senang dengan matematika dan fisika. Pandai dalam programming dan problem solving. Tertarik dengan robotika dan AI. Suka berkompetisi dan kerja tim..." 
+                    <textarea name="interests_talents" rows="6" placeholder="Contoh: Saya senang dengan matematika dan fisika. Pandai dalam programming dan problem solving. Tertarik dengan robotika dan AI. Suka berkompetisi dan kerja tim..."
                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition">{{ old('interests_talents', $user->interests_talents) }}</textarea>
                     <p class="text-sm text-gray-500 mt-2">Maksimal 1000 karakter</p>
                     @error('interests_talents')

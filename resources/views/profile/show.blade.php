@@ -40,18 +40,6 @@
                         <label class="text-sm font-bold text-gray-500 mb-2 block">Nomor Telepon</label>
                         <p class="text-gray-900 font-medium">{{ $user->phone ?? '-' }}</p>
                     </div>
-                    <div>
-                        <label class="text-sm font-bold text-gray-500 mb-2 block">Tanggal Lahir</label>
-                        <p class="text-gray-900 font-medium">
-                            {{ $user->date_of_birth ? \Carbon\Carbon::parse($user->date_of_birth)->translatedFormat('d F Y') : '-' }}
-                        </p>
-                    </div>
-                    <div>
-                        <label class="text-sm font-bold text-gray-500 mb-2 block">Jenis Kelamin</label>
-                        <p class="text-gray-900 font-medium">
-                            {{ $user->gender == 'male' ? 'Laki-laki' : ($user->gender == 'female' ? 'Perempuan' : '-') }}
-                        </p>
-                    </div>
                 </div>
 
                 @if($user->interests_talents)
