@@ -215,26 +215,11 @@ GEMINI_API_KEY=your_api_key_here
 ```
 
 ### 6. Setup Database
-**Menggunakan Script Helper (Recommended):**
-```bash
-# Windows
-setup-database.bat
 
-# Linux/Mac
-chmod +x setup-database.sh
-./setup-database.sh
-```
-
-**Atau Manual:**
 ```bash
 php artisan migrate:fresh --seed
 ```
-
-Script akan:
-- Membuat semua tabel yang diperlukan
-- Mengisi data dummy untuk Beasiswa (15+ data)
-- Mengisi data dummy untuk Tryout (10+ data)
-- Mengisi data dummy untuk Kalender Akademik (30+ event)
+Berfungsi untuk segala situasi.
 
 ### 7. Build Assets
 ```bash
