@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#3B8773">
     <title>UI Test - Edvizo</title>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -78,7 +78,7 @@
         @media (max-width: 768px) { .sidebar-left { display: none; } }
 
         /* --- KOMPONEN --- */
-        
+
         /* Brand */
         .brand { padding: 25px; display: flex; align-items: center; gap: 12px; }
         .logo-box { background: rgba(255,255,255,0.2); padding: 6px; border-radius: 8px; display: flex; }
@@ -105,7 +105,7 @@
         }
         .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
         .badge { background: var(--primary-light); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; }
-        
+
         .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .user-text { text-align: right; display: none; }
         @media (min-width: 768px) { .user-text { display: block; } }
@@ -171,7 +171,7 @@
             padding: 20px; display: flex; justify-content: center;
             z-index: 10;
         }
-        
+
         .input-box {
             background: white; width: 100%; max-width: 800px;
             border: 1px solid var(--border); border-radius: 50px;
@@ -208,7 +208,7 @@
         .history-card.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(59, 135, 115, 0.2); }
         .history-card.inactive { background: #F9FAFB; color: var(--text-main); }
         .history-card.inactive:hover { background: var(--primary-light); }
-        
+
         .h-title { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
         .h-sub { font-size: 11px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -220,22 +220,22 @@
             .app-layout {
                 flex-direction: column;
             }
-            
+
             .sidebar-left, .sidebar-right {
                 width: 100%;
                 height: auto;
                 max-height: 60vh;
             }
-            
+
             .sidebar-right {
                 border-left: none;
                 border-top: 1px solid var(--border);
             }
-            
+
             .msg-bubble {
                 max-width: 90%;
             }
-            
+
             .input-container {
                 padding: 15px;
             }
@@ -245,7 +245,7 @@
 <body>
 
 <div class="app-layout">
-    
+
     <aside class="sidebar-left">
         <div class="brand">
             <div class="logo-box">
@@ -319,7 +319,7 @@
 
     <aside class="sidebar-right">
         <div class="history-header">Riwayat Percakapan</div>
-        
+
         <div style="flex: 1; overflow-y: auto;">
             <div class="history-label">HARI INI</div>
             <div class="history-card active">
@@ -333,7 +333,7 @@
                 <div class="h-sub">Cari beasiswa dalam negeri</div>
             </div>
         </div>
-        
+
         <div style="padding: 20px; border-top: 1px solid #eee;">
             <button onclick="location.reload()" style="width: 100%; padding: 12px; background: var(--primary-light); color: var(--primary); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
                 Percakapan Baru
@@ -386,7 +386,7 @@
     function addMessage(text, sender) {
         const div = document.createElement('div');
         div.className = `msg-row ${sender}`; // FIX: menggunakan backticks untuk template literal
-        
+
         // Icon Bot jika pengirim adalah bot
         const botIcon = sender === 'bot' ? `
             <div class="bot-icon-small">
@@ -421,7 +421,7 @@
         chatContainer.scrollTop = chatContainer.scrollHeight;
         return id;
     }
-    
+
     // Auto-focus pada input field saat halaman load
     document.addEventListener('DOMContentLoaded', function() {
         userInput.focus();
