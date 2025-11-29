@@ -75,18 +75,21 @@
 
         <div class="flex items-center gap-4">
             <div class="text-right hidden sm:block">
-                <p class="text-sm font-bold text-[#3B8773]">Ghani Baskara</p>
-                <p class="text-xs text-gray-500">Siswa</p>
+                <p class="text-sm font-bold text-[#3B8773]">{{ Auth::user()->name ?? 'Guest' }}</p>
+                <p class="text-xs text-gray-500">{{ Auth::user()->role ?? 'Siswa' }}</p>
             </div>
             <div class="relative group cursor-pointer">
                 <div class="w-10 h-10 bg-[#E8F5F3] rounded-full flex items-center justify-center border border-white shadow-sm ring-2 ring-transparent hover:ring-[#3B8773]/20 transition">
-                    <span class="text-[#3B8773] font-bold">G</span>
+                    <span class="text-[#3B8773] font-bold">{{ strtoupper(substr(Auth::user()->name ?? 'G', 0, 1)) }}</span>
                 </div>
                 <div class="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
-                    <a href="#" class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-xl transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                        Keluar
-                    </a>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-xl transition w-full">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                            Keluar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -101,7 +104,7 @@
                     <div class="w-24 h-24 bg-white rounded-[28px] flex items-center justify-center shadow-xl shadow-teal-50 mb-6 ring-1 ring-gray-50">
                         <img src="{{ asset('images/Vectoredvizo.svg') }}" class="w-12 h-12" alt="Bot">
                     </div>
-                    <h1 class="text-3xl md:text-4xl font-bold text-[#3B8773] mb-3 tracking-tight">Hai, Ghani! 👋</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold text-[#3B8773] mb-3 tracking-tight">Hai, {{ Auth::user()->name ?? 'Guest' }}! 👋</h1>
                     <p class="text-gray-400 text-lg font-light mb-10 text-center max-w-md leading-relaxed">
                         Ceritakan minatmu, saya akan bantu temukan jurusan impianmu.
                     </p>
@@ -160,28 +163,28 @@
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-lg transition duration-300">
+                    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.02)] hover:shadow-lg transition duration-300">
                         <div class="flex items-center gap-4 mb-6">
                             <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-green-600 font-bold text-xl shadow-inner">S</div>
                             <h3 class="font-bold text-xl text-gray-800">Strengths <span class="block text-xs text-gray-400 font-normal mt-0.5">Kekuatan Internal</span></h3>
                         </div>
                         <ul id="swot-s" class="space-y-3 text-gray-600 list-disc list-outside pl-5 marker:text-green-500"></ul>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-lg transition duration-300">
+                    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.02)] hover:shadow-lg transition duration-300">
                         <div class="flex items-center gap-4 mb-6">
                             <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-600 font-bold text-xl shadow-inner">W</div>
                             <h3 class="font-bold text-xl text-gray-800">Weaknesses <span class="block text-xs text-gray-400 font-normal mt-0.5">Kelemahan Internal</span></h3>
                         </div>
                         <ul id="swot-w" class="space-y-3 text-gray-600 list-disc list-outside pl-5 marker:text-red-500"></ul>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-lg transition duration-300">
+                    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.02)] hover:shadow-lg transition duration-300">
                         <div class="flex items-center gap-4 mb-6">
                             <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xl shadow-inner">O</div>
                             <h3 class="font-bold text-xl text-gray-800">Opportunities <span class="block text-xs text-gray-400 font-normal mt-0.5">Peluang Eksternal</span></h3>
                         </div>
                         <ul id="swot-o" class="space-y-3 text-gray-600 list-disc list-outside pl-5 marker:text-blue-500"></ul>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-lg transition duration-300">
+                    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.02)] hover:shadow-lg transition duration-300">
                         <div class="flex items-center gap-4 mb-6">
                             <div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 font-bold text-xl shadow-inner">T</div>
                             <h3 class="font-bold text-xl text-gray-800">Threats <span class="block text-xs text-gray-400 font-normal mt-0.5">Tantangan Eksternal</span></h3>

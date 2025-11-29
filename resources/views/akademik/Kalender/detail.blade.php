@@ -1,99 +1,111 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Kegiatan - Edvizor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif']
-                    },
-                    colors: {
-                        sage: {
-                            50: '#f3f9f6',
-                            100: '#e2f0e9',
-                            200: '#cde0d3',
-                            300: '#b1c9b5',
-                            400: '#92b296',
-                            500: '#7da893',
-                            600: '#558b72',
-                            700: '#4a7c66',
-                            800: '#3a5f4e',
-                            900: '#2f5d48'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .wave-bottom {
-            clip-path: path('M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,261.3C960,256,1056,224,1152,197.3C1248,171,1344,149,1392,138.7L1440,128V320H1392C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320H0Z');
-        }
-    </style>
-</head>
-<body class="min-h-screen bg-green-50 font-sans relative overflow-hidden">
+@extends('layouts.app')
 
-    <!-- Background Elements -->
-    <div class="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
-        <div class="absolute -top-20 -left-20 w-96 h-96 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-        <div class="absolute top-40 right-0 w-96 h-96 bg-green-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-        <svg class="absolute bottom-0 w-full text-green-800 opacity-10 wave-bottom" viewBox="0 0 1440 320" fill="currentColor">
-            <path fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,261.3C960,256,1056,224,1152,197.3C1248,171,1344,149,1392,138.7L1440,128V320H1392C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320H0Z"></path>
-        </svg>
-    </div>
+@section('title', 'Detail Kegiatan - Edvizo')
 
-    <!-- Back Button -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 py-6">
-        <div class="absolute top-8 left-4 md:left-20">
-            <a href="/kalender-akademik" class="w-10 h-10 rounded-full border border-green-600 flex items-center justify-center text-green-800 hover:bg-green-600 hover:text-white transition">
+@section('content')
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-[#3B8773] to-[#2E6B5B] text-white pt-16 pb-12 px-6">
+        <div class="max-w-4xl mx-auto">
+            <a href="{{ route('akademik.kalender', ['year' => $year ?? now()->year, 'month' => $month ?? now()->month]) }}" class="inline-flex items-center gap-2 text-gray-200 hover:text-white transition mb-6">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
+                Kembali ke Kalender
             </a>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="relative z-10 max-w-3xl mx-auto px-4 py-20">
-        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-green-100 p-8 md:p-12 text-center">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span class="text-2xl font-bold text-green-800">{{ $day ?? 15 }}</span>
-            </div>
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Detail Kegiatan Tanggal {{ $day ?? 15 }}</h1>
-            <div class="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
-                <p class="text-gray-700 text-lg">Belum ada kegiatan khusus yang diatur untuk tanggal ini.</p>
-            </div>
-            <div class="space-y-4">
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="/kalender-akademik" class="bg-gradient-to-r from-sage-600 to-sage-700 text-white font-bold py-3 px-8 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 inline-flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                        Kembali ke Kalender
-                    </a>
-                    <button class="bg-white border-2 border-sage-600 text-sage-700 font-bold py-3 px-8 rounded-xl hover:bg-sage-50 transition duration-300 inline-flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Setel Pengingat
-                    </button>
+            <div class="flex items-start gap-6">
+                <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                    <div class="text-3xl font-bold">{{ $day }}</div>
+                </div>
+                <div class="flex-1">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-2">
+                        {{ isset($date) ? $date->translatedFormat('l, d F Y') : 'Kegiatan Tanggal ' . $day }}
+                    </h1>
+                    <p class="text-lg text-gray-200">
+                        @if(isset($events) && $events->count() > 0)
+                            {{ $events->count() }} kegiatan dijadwalkan
+                        @else
+                            Tidak ada kegiatan
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Footer -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center">
-        <div class="text-green-800 text-xs font-bold opacity-60">
-            © - Copyright by Edvizo.
-        </div>
+    <div class="max-w-4xl mx-auto px-6 py-12">
+        @if(isset($events) && $events->count() > 0)
+            <div class="space-y-4">
+                @foreach($events as $event)
+                    <a href="{{ route('akademik.event.show', ['id' => $event->id, 'year' => $year ?? now()->year, 'month' => $month ?? now()->month]) }}"
+                       class="block bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
+                        <div class="flex items-start gap-4">
+                            <div class="w-14 h-14 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[#3B8773] group-hover:text-white transition">
+                                @php
+                                    $categoryIcons = [
+                                        'Pendaftaran' => '📝',
+                                        'Akademik' => '🎓',
+                                        'Pembelajaran' => '📚',
+                                        'Ujian' => '✏️',
+                                        'Liburan' => '🌴',
+                                        'Pengumuman' => '📢',
+                                    ];
+                                @endphp
+                                {{ $categoryIcons[$event->category] ?? '📅' }}
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-start justify-between mb-2">
+                                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-[#3B8773] transition">
+                                        {{ $event->title }}
+                                    </h3>
+                                    <span class="text-xs font-bold text-white bg-[#3B8773] px-3 py-1 rounded-full shrink-0 ml-3">
+                                        {{ $event->category }}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $event->description }}</p>
+                                <div class="flex items-center gap-4 text-sm text-gray-700">
+                                    @if($event->start_time)
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            <span class="font-medium">
+                                                {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}
+                                                @if($event->end_time)
+                                                    - {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
+                                                @endif
+                                                WIB
+                                            </span>
+                                        </div>
+                                    @endif
+                                    @if($event->location)
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                            <span class="font-medium">{{ Str::limit($event->location, 30) }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <svg class="w-6 h-6 text-gray-400 group-hover:text-[#3B8773] transition shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @else
+            <div class="bg-white rounded-2xl p-12 text-center border-2 border-dashed border-gray-200">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <p class="text-gray-500 font-medium text-lg">Tidak ada kegiatan yang dijadwalkan untuk tanggal ini</p>
+            </div>
+        @endif
     </div>
-
-</body>
-</html>
+</div>
+@endsection

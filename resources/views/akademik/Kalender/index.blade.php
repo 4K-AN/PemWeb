@@ -67,25 +67,31 @@
                             @endif
 
                             @php
-                                $hasEvent = isset($eventsByDate[$date->format('Y-m-d')]);
+                                $dateStr = $date->format('Y-m-d');
+                                $hasEvent = isset($eventsByDate[$dateStr]);
                                 $isCurrentMonth = $date->month == $month;
+                                $dateEvents = $hasEvent ? $eventsByDate[$dateStr] : collect();
                             @endphp
 
                             <td class="px-4 py-6 border border-gray-100 {{ $hasEvent && $isCurrentMonth ? 'bg-[#F0F9F7]' : '' }} hover:bg-[#E8F5F3] transition relative">
                                 @if ($isCurrentMonth)
-                                    <a href="{{ route('akademik.kalender.detail', ['day' => $date->day, 'year' => $year, 'month' => $month]) }}" class="block">
-                                        <div class="text-sm font-bold mb-2 {{ $date->isToday() ? 'text-[#3B8773]' : 'text-gray-700' }}">
-                                            {{ $date->day }}
-                                        </div>
-                                        @if ($hasEvent)
+                                    @if ($hasEvent)
+                                        <a href="{{ route('akademik.kalender.detail', ['day' => $date->day, 'year' => $year, 'month' => $month]) }}" class="block">
+                                            <div class="text-sm font-bold mb-2 {{ $date->isToday() ? 'text-[#3B8773]' : 'text-gray-700' }}">
+                                                {{ $date->day }}
+                                            </div>
                                             <div class="flex items-center justify-center gap-1">
                                                 <div class="w-2 h-2 bg-[#3B8773] rounded-full"></div>
                                                 <span class="text-xs text-[#3B8773] font-medium">
-                                                    {{ count($eventsByDate[$date->format('Y-m-d')]) }} acara
+                                                    {{ count($dateEvents) }} acara
                                                 </span>
                                             </div>
-                                        @endif
-                                    </a>
+                                        </a>
+                                    @else
+                                        <div class="text-sm font-bold {{ $date->isToday() ? 'text-[#3B8773]' : 'text-gray-700' }}">
+                                            {{ $date->day }}
+                                        </div>
+                                    @endif
                                 @else
                                     <div class="text-sm font-bold text-gray-400">{{ $date->day }}</div>
                                 @endif
@@ -110,7 +116,7 @@
             @if($events->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($events as $event)
-                        <a href="{{ route('akademik.event.show', $event->id) }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
+                        <a href="{{ route('akademik.event.show', ['id' => $event->id, 'year' => $year, 'month' => $month]) }}" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border border-gray-100 group">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="w-12 h-12 bg-[#E8F5F3] rounded-xl flex items-center justify-center text-xl">
                                     @php

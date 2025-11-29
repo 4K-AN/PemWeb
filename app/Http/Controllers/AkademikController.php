@@ -25,32 +25,29 @@ class AkademikController extends Controller
     }
 
     // Detail tanggal tertentu
-    public function detail($day)
+    public function detail(Request $request, $day)
     {
-        $year = request()->get('year', now()->year);
-        $month = request()->get('month', now()->month);
+        $year = $request->get('year', now()->year);
+        $month = $request->get('month', now()->month);
 
         $date = Carbon::createFromDate($year, $month, $day);
 
         // Ambil event pada tanggal ini
         $events = AcademicEvent::whereDate('event_date', $date)->get();
 
-        return view('akademik.Kalender.detail', compact('date', 'events', 'year', 'month'));
+        return view('akademik.Kalender.detail', compact('events', 'day', 'year', 'month', 'date'));
     }
 
     // Detail event spesifik
-    public function showEvent($id)
+    public function showEvent(Request $request, $id)
     {
         $event = AcademicEvent::findOrFail($id);
 
-        $hasReminder = false;
-        if (Auth::check()) {
-            $hasReminder = EventReminder::where('user_id', Auth::id())
-                                       ->where('academic_event_id', $id)
-                                       ->exists();
-        }
+        // Ambil parameter year dan month dari request, atau gunakan dari event_date
+        $year = $request->get('year', $event->event_date->year);
+        $month = $request->get('month', $event->event_date->month);
 
-        return view('akademik.Kalender.event', compact('event', 'hasReminder'));
+        return view('akademik.Kalender.event', compact('event', 'year', 'month'));
     }
 
     // Set reminder untuk event

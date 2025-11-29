@@ -23,14 +23,4 @@ class AcademicEvent extends Model
     protected $casts = [
         'event_date' => 'date',
     ];
-
-    public function reminders()
-    {
-        return $this->hasMany(EventReminder::class);
-    }
-
-    public function userReminder($userId)
-    {
-        return $this->reminders()->where('user_id', $userId)->first();
-    }
 }

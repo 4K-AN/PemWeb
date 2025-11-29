@@ -12,6 +12,11 @@ class ChatbotController extends Controller
 {
     public function index()
     {
+        // Pastikan user sudah login, jika tidak redirect ke login
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk mengakses chatbot.');
+        }
+
         return view('chatbot.index');
     }
 
@@ -81,7 +86,7 @@ class ChatbotController extends Controller
                     [DATA PROFIL USER]:
                     Nama: {$user->name}
                     Minat & Bakat: {$user->interests_talents}
-                    
+
                     Gunakan informasi ini sebagai pertimbangan utama dalam memberikan rekomendasi jurusan yang paling sesuai dengan profil dan potensi user.
                     ";
                 }

@@ -7,7 +7,7 @@
     <!-- Hero Section -->
     <section class="bg-gradient-to-br from-[#3B8773] to-[#2E6B5B] text-white pt-16 pb-12 px-6">
         <div class="max-w-4xl mx-auto">
-            <a href="{{ route('akademik.kalender') }}" class="inline-flex items-center gap-2 text-gray-200 hover:text-white transition mb-6">
+            <a href="{{ route('akademik.kalender', ['year' => $year, 'month' => $month]) }}" class="inline-flex items-center gap-2 text-gray-200 hover:text-white transition mb-6">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
@@ -31,14 +31,8 @@
     </section>
 
     <div class="max-w-4xl mx-auto px-6 py-12">
-        @if(session('success'))
-            <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-8 rounded-lg">
-                <p class="text-green-700 font-medium">{{ session('success') }}</p>
-            </div>
-        @endif
-
         <!-- Event Details -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Detail Acara</h2>
 
             <div class="space-y-6">
@@ -89,69 +83,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Reminder Section -->
-        @auth
-            <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Atur Pengingat</h2>
-
-                @if(!$hasReminder)
-                    <p class="text-gray-600 mb-6">Atur pengingat untuk acara ini agar Anda tidak melewatkannya.</p>
-
-                    <form action="{{ route('akademik.event.reminder', $event->id) }}" method="POST">
-                        @csrf
-                        <div class="mb-6">
-                            <label class="block text-sm font-bold text-gray-700 mb-3">Ingatkan saya</label>
-                            <div class="space-y-3">
-                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer">
-                                    <input type="radio" name="reminder_days" value="0" class="w-4 h-4 text-[#3B8773]">
-                                    <span class="font-medium text-gray-700">Pada hari yang sama</span>
-                                </label>
-                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer">
-                                    <input type="radio" name="reminder_days" value="1" checked class="w-4 h-4 text-[#3B8773]">
-                                    <span class="font-medium text-gray-700">1 hari sebelumnya</span>
-                                </label>
-                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer">
-                                    <input type="radio" name="reminder_days" value="3" class="w-4 h-4 text-[#3B8773]">
-                                    <span class="font-medium text-gray-700">3 hari sebelumnya</span>
-                                </label>
-                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer">
-                                    <input type="radio" name="reminder_days" value="7" class="w-4 h-4 text-[#3B8773]">
-                                    <span class="font-medium text-gray-700">1 minggu sebelumnya</span>
-                                </label>
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full bg-[#3B8773] text-white px-6 py-4 rounded-xl font-bold hover:bg-[#2E6B5B] transition">
-                            Atur Pengingat
-                        </button>
-                    </form>
-                @else
-                    <div class="bg-green-50 border-2 border-green-200 rounded-xl p-6 mb-6">
-                        <div class="flex items-center gap-3 mb-3">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <h3 class="text-lg font-bold text-green-900">Pengingat Sudah Diatur</h3>
-                        </div>
-                        <p class="text-green-700 font-medium">Anda akan menerima pengingat untuk acara ini.</p>
-                    </div>
-
-                    <form action="{{ route('akademik.event.reminder.remove', $event->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full bg-red-50 text-red-600 px-6 py-4 rounded-xl font-bold hover:bg-red-100 transition border-2 border-red-200">
-                            Hapus Pengingat
-                        </button>
-                    </form>
-                @endif
-            </div>
-        @else
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg">
-                <p class="text-yellow-800 font-medium">
-                    <a href="{{ route('login') }}" class="underline font-bold">Login</a> untuk mengatur pengingat acara ini.
-                </p>
-            </div>
-        @endauth
     </div>
 </div>
 @endsection
