@@ -312,6 +312,43 @@ DB::statement('ALTER TABLE `beasiswas` MODIFY `gambar` VARCHAR(255) NULL');
 exit
 ```
 
+### Error: "Table 'tryouts' doesn't exist" saat migrate
+```bash
+# Ini terjadi karena ada migration lama yang konflik
+
+# Solusi:
+# 1. Hapus migration yang error (manual):
+#    database/migrations/*_add_fitur_to_tryouts_table.php
+
+# 2. Atau skip migration otomatis:
+php artisan tinker
+
+# Lalu ketik:
+DB::table('migrations')->where('migration', 'like', '%add_fitur_to_tryouts_table%')->delete();
+exit
+
+# 3. Jalankan migrate lagi:
+php artisan migrate:fresh --seed
+```
+
+### Error: Migration konflik setelah pull dari device lain
+```bash
+# Scenario: Pull dari teman yang punya migration lama
+
+# Langkah 1: Cek migration yang error
+php artisan migrate:status
+
+# Langkah 2: Hapus migration yang konflik (manual)
+# Cari file di folder database/migrations/ yang error
+# Biasanya file lama seperti:
+# - *_add_fitur_to_tryouts_table.php
+# - *_add_filter_columns_to_beasiswas_table.php (yang lama)
+# - *_create_tryouts_table.php (yang lama, bukan _final)
+
+# Langkah 3: Fresh migrate
+php artisan migrate:fresh --seed
+```
+
 ---
 
 ## ❓ FAQ
