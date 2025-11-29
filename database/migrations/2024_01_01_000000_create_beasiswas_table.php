@@ -11,15 +11,15 @@ return new class extends Migration
         Schema::create('beasiswas', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('jurusan');
+            $table->text('deskripsi')->nullable();
             $table->string('universitas');
-            $table->enum('status', ['Dalam Negeri', 'Luar Negeri']);
-            $table->enum('jenjang', ['S1', 'S2', 'S3']);
-            $table->decimal('ipk_minimal', 3, 2);
-            $table->text('deskripsi');
-            $table->string('gambar');
-            $table->boolean('is_popular')->default(false);
-            $table->date('deadline');
+            $table->string('kategori')->nullable(); // Kolom kategori ditambahkan
+            $table->string('negara');
+            $table->string('status', 50)->nullable();
+            $table->date('deadline')->nullable();
+            $table->decimal('ipk_minimal', 3, 2)->nullable();
+            $table->string('jurusan')->nullable();
+            $table->string('gambar')->nullable();
             $table->timestamps();
         });
     }
