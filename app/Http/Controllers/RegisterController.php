@@ -9,11 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
+    /**
+     * Menampilkan halaman registrasi
+     */
     public function show()
     {
         return view('register_edvizo');
     }
 
+    /**
+     * Memproses registrasi user baru
+     */
     public function process(Request $request)
     {
         $validated = $request->validate([
@@ -36,7 +42,6 @@ class RegisterController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        // Auto login after register
         Auth::login($user);
 
         return redirect('/home')->with('success', 'Registrasi berhasil! Selamat datang di Edvizo.');

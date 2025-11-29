@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    /**
+     * Proses autentikasi login user
+     */
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -24,6 +27,9 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
+    /**
+     * Proses logout user
+     */
     public function logout(Request $request)
     {
         Auth::logout();

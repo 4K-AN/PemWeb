@@ -8,18 +8,27 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
+    /**
+     * Menampilkan halaman profil user
+     */
     public function show()
     {
         $user = Auth::user();
         return view('profile.show', compact('user'));
     }
 
+    /**
+     * Menampilkan halaman edit profil
+     */
     public function edit()
     {
         $user = Auth::user();
         return view('profile.edit', compact('user'));
     }
 
+    /**
+     * Memperbarui data profil user
+     */
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -33,23 +42,44 @@ class ProfileController extends Controller
             'new_password' => 'nullable|min:8|confirmed',
         ]);
 
-        // Update password jika ada
+        // Validasi dan update password jika diisi
         if ($request->filled('current_password')) {
             if (!Hash::check($request->current_password, $user->password)) {
                 return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai']);
             }
-
             $user->password = Hash::make($request->new_password);
         }
 
-        // Update data user
-        $user->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'phone' => $validated['phone'],
-            'interests_talents' => $validated['interests_talents'],
-        ]);
+        // Update data profil user
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'];
+        $user->interests_talents = $validated['interests_talents'];
+        $user->save();
 
         return redirect()->route('profile.show')->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    /**
+     * Menghapus akun user (termasuk cascade delete data terkait)
+     */
+    public function destroy(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'password' => 'required',
+        ]);
+
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['password' => 'Password tidak sesuai']);
+        }
+
+        Auth::logout();
+        $user->delete();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home')->with('success', 'Akun Anda berhasil dihapus.');
     }
 }

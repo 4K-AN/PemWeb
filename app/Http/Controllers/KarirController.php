@@ -8,27 +8,27 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Controller untuk mengelola simulasi karir berdasarkan fiksasi jurusan user
+ * Menggunakan Google Gemini AI untuk rekomendasi karir
+ */
 class KarirController extends Controller
 {
-    // Fungsi untuk halaman utama (Daftar Kartu)
+    /**
+     * Menampilkan halaman simulasi karir dengan daftar rekomendasi
+     */
     public function index()
     {
-        // Cek apakah user sudah login
         if (!Auth::check()) {
             return view('karir.Fiksasi.simulasi.index', ['fixation' => null, 'careers' => [], 'error' => null]);
         }
 
-        // Ambil fiksasi terbaru user
         $fixation = Auth::user()->latestFixation();
         $careers = [];
         $error = null;
 
-        // Jika ada fiksasi, ambil rekomendasi karir dari AI
         if ($fixation) {
-            \Log::info('=== KARIR CONTROLLER START ===');
-            \Log::info('User ID: ' . Auth::id());
-            \Log::info('Fixation ID: ' . $fixation->id);
-            \Log::info('Jurusan: ' . $fixation->jurusan);
+            \Log::info('Karir Controller - User ID: ' . Auth::id() . ', Fixation ID: ' . $fixation->id . ', Jurusan: ' . $fixation->jurusan);
 
             $result = $this->getAICareers($fixation);
 
@@ -39,13 +39,10 @@ class KarirController extends Controller
                 $careers = $result['careers'] ?? [];
                 \Log::info('Total careers returned: ' . count($careers));
             }
-
-            \Log::info('=== KARIR CONTROLLER END ===');
         } else {
             \Log::warning('No fixation found for user: ' . Auth::id());
         }
 
-        // Tampilkan halaman dengan data fiksasi dan karir
         return view('karir.Fiksasi.simulasi.index', [
             'fixation' => $fixation,
             'careers' => $careers,
@@ -53,13 +50,15 @@ class KarirController extends Controller
         ]);
     }
 
-    // Fungsi untuk mengambil rekomendasi karir dari AI
+    /**
+     * Mengambil rekomendasi karir dari Gemini AI berdasarkan fiksasi jurusan
+     * Menggunakan cache untuk menghindari pemanggilan API berulang
+     */
     private function getAICareers($fixation)
     {
         try {
             $cacheKey = 'ai_careers_' . $fixation->id;
 
-            // JANGAN HAPUS CACHE - Sudah benar!
             if (Cache::has($cacheKey)) {
                 \Log::info('Returning careers from cache');
                 return ['careers' => Cache::get($cacheKey)];
@@ -145,7 +144,7 @@ Return HANYA JSON array:";
             \Log::info('Raw AI response length: ' . strlen($text) . ' characters');
             \Log::info('First 200 chars: ' . substr($text, 0, 200));
 
-            // Cleaning process
+            // Cleaning process: hapus markdown code blocks
             $text = trim($text);
             $text = preg_replace('/^```json\s*/i', '', $text);
             $text = preg_replace('/^```\s*/i', '', $text);
@@ -207,50 +206,42 @@ Return HANYA JSON array:";
             return ['error' => 'Hanya ' . count($validCareers) . ' karir valid dari total ' . count($careers) . ' karir.'];
 
         } catch (\Exception $e) {
-            \Log::error('EXCEPTION in getAICareers');
-            \Log::error('Message: ' . $e->getMessage());
+            \Log::error('Exception in getAICareers: ' . $e->getMessage());
             \Log::error('File: ' . $e->getFile() . ':' . $e->getLine());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
             return ['error' => 'Error: ' . $e->getMessage()];
         }
     }
 
-    // Fungsi untuk halaman Detail
+    /**
+     * Menampilkan detail karir berdasarkan slug
+     */
     public function show($slug)
     {
-        // Cek apakah user sudah login
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        // Ambil fiksasi terbaru user
         $fixation = Auth::user()->latestFixation();
 
-        // Jika tidak ada fiksasi, redirect ke halaman simulasi karir
         if (!$fixation) {
             return redirect()->route('simulasi.karir');
         }
 
         try {
-            // Cari dari list careers dulu
             $result = $this->getAICareers($fixation);
 
-            // FIX: Check if error or careers
             if (isset($result['error'])) {
                 abort(404, 'Error loading careers: ' . $result['error']);
             }
 
             $careers = $result['careers'] ?? [];
-
-            // FIX: Use collect on careers array, not result
             $job = collect($careers)->firstWhere('id', $slug);
 
             if (!$job) {
-                // Generate detail dari AI
                 $job = $this->getAICareerDetail($fixation, $slug);
             }
 
-            // Tampilkan halaman detail karir
             return view('karir.Fiksasi.simulasi.detail', ['job' => $job]);
 
         } catch (\Exception $e) {
@@ -259,7 +250,9 @@ Return HANYA JSON array:";
         }
     }
 
-    // Fungsi untuk mengambil detail karir dari AI
+    /**
+     * Mengambil detail karir spesifik dari Gemini AI
+     */
     private function getAICareerDetail($fixation, $slug)
     {
         try {

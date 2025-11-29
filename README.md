@@ -59,6 +59,13 @@ Kalender interaktif dengan:
 ### 5. 💼 Simulasi Karir
 Eksplorasi karir berdasarkan jurusan yang sudah difiksasi dengan informasi tentang prospek kerja dan jenjang karir.
 
+### 6. 👤 Manajemen Profil
+Fitur manajemen akun pengguna:
+- View dan edit profil (nama, email, nomor telepon)
+- Update minat & bakat untuk rekomendasi AI yang lebih akurat
+- Ubah password dengan validasi keamanan
+- **Hapus akun** dengan konfirmasi password (termasuk cascade delete semua data terkait)
+
 ---
 
 ## 🗄️ Schema Database

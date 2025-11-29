@@ -9,13 +9,14 @@ use Carbon\Carbon;
 
 class AkademikController extends Controller
 {
-    // Halaman index kalender
+    /**
+     * Menampilkan halaman kalender akademik
+     */
     public function index(Request $request)
     {
         $year = $request->get('year', now()->year);
         $month = $request->get('month', now()->month);
 
-        // Ambil semua event untuk bulan ini
         $events = AcademicEvent::whereYear('event_date', $year)
                               ->whereMonth('event_date', $month)
                               ->get();
@@ -23,33 +24,35 @@ class AkademikController extends Controller
         return view('akademik.Kalender.index', compact('year', 'month', 'events'));
     }
 
-    // Detail tanggal tertentu
+    /**
+     * Menampilkan detail event pada tanggal tertentu
+     */
     public function detail(Request $request, $day)
     {
         $year = $request->get('year', now()->year);
         $month = $request->get('month', now()->month);
-
         $date = Carbon::createFromDate($year, $month, $day);
 
-        // Ambil event pada tanggal ini
         $events = AcademicEvent::whereDate('event_date', $date)->get();
 
         return view('akademik.Kalender.detail', compact('events', 'day', 'year', 'month', 'date'));
     }
 
-    // Detail event spesifik
+    /**
+     * Menampilkan detail event spesifik
+     */
     public function showEvent(Request $request, $id)
     {
         $event = AcademicEvent::findOrFail($id);
-
-        // Ambil parameter year dan month dari request, atau gunakan dari event_date
         $year = $request->get('year', $event->event_date->year);
         $month = $request->get('month', $event->event_date->month);
 
         return view('akademik.Kalender.event', compact('event', 'year', 'month'));
     }
 
-    // Set reminder untuk event
+    /**
+     * Mengatur reminder untuk event (memerlukan login)
+     */
     public function setReminder(Request $request, $id)
     {
         if (!Auth::check()) {
@@ -62,12 +65,10 @@ class AkademikController extends Controller
             'reminder_days' => 'required|integer|min:0|max:30'
         ]);
 
-        // Hitung waktu reminder
         $reminderTime = Carbon::parse($event->event_date)
                              ->subDays($validated['reminder_days'])
                              ->setTime(8, 0, 0);
 
-        // Cek apakah sudah ada reminder
         $existing = EventReminder::where('user_id', Auth::id())
                                 ->where('academic_event_id', $id)
                                 ->first();
@@ -86,7 +87,9 @@ class AkademikController extends Controller
         return back()->with('success', 'Reminder berhasil diatur!');
     }
 
-    // Hapus reminder
+    /**
+     * Menghapus reminder event
+     */
     public function removeReminder($id)
     {
         if (!Auth::check()) {

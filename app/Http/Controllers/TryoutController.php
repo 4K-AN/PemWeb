@@ -7,11 +7,14 @@ use Illuminate\Http\Request;
 
 class TryoutController extends Controller
 {
+    /**
+     * Menampilkan daftar tryout dengan filter dan pencarian
+     */
     public function index(Request $request)
     {
         $query = Tryout::where('is_active', true);
 
-        // Filter berdasarkan kategori (jenis ujian)
+        // Filter berdasarkan kategori
         if ($request->has('kategori') && $request->kategori != '') {
             $query->where('kategori', $request->kategori);
         }
@@ -40,12 +43,12 @@ class TryoutController extends Controller
             }
         }
 
-        // Filter gratis
+        // Filter tryout gratis
         if ($request->has('gratis') && $request->gratis == '1') {
             $query->where('biaya', 0);
         }
 
-        // Filter fitur (pembahasan, sertifikat, ranking)
+        // Filter berdasarkan fitur (pembahasan, sertifikat, ranking)
         if ($request->has('pembahasan') && $request->pembahasan == '1') {
             $query->where('dengan_pembahasan', true);
         }
@@ -56,7 +59,7 @@ class TryoutController extends Controller
             $query->where('dengan_ranking', true);
         }
 
-        // Search
+        // Pencarian berdasarkan keyword
         if ($request->has('q') && $request->q != '') {
             $query->where(function($q) use ($request) {
                 $q->where('nama_tryout', 'like', '%' . $request->q . '%')
@@ -72,7 +75,7 @@ class TryoutController extends Controller
 
         $tryouts = $query->paginate(12);
 
-        // Data untuk filter dropdown dengan fallback
+        // Data untuk filter dropdown
         $kategoris = Tryout::where('is_active', true)
                           ->select('kategori')
                           ->distinct()
@@ -81,7 +84,6 @@ class TryoutController extends Controller
                           ->orderBy('kategori')
                           ->pluck('kategori');
 
-        // Jika kosong, berikan data default
         if ($kategoris->isEmpty()) {
             $kategoris = collect(['UTBK', 'SNBT', 'Ujian Mandiri', 'Kedinasan']);
         }
@@ -94,25 +96,25 @@ class TryoutController extends Controller
                         ->orderBy('lokasi')
                         ->pluck('lokasi');
 
-        // Jika kosong, berikan data default
         if ($lokasis->isEmpty()) {
             $lokasis = collect(['Online', 'Offline', 'Jakarta', 'Bandung', 'Surabaya']);
         }
 
-        // Debug log (hapus setelah selesai debugging)
-        \Log::info('Kategoris: ' . $kategoris->toJson());
-        \Log::info('Lokasis: ' . $lokasis->toJson());
-        \Log::info('Total Tryouts: ' . $tryouts->total());
-
         return view('tryout.index', compact('tryouts', 'kategoris', 'lokasis'));
     }
 
+    /**
+     * Menampilkan detail tryout
+     */
     public function show($id)
     {
         $tryout = Tryout::findOrFail($id);
         return view('tryout.show', compact('tryout'));
     }
 
+    /**
+     * Handle pencarian tryout
+     */
     public function search(Request $request)
     {
         return $this->index($request);

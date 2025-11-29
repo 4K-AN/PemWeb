@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Beasiswa;
 use Illuminate\Http\Request;
 
+/**
+ * Controller untuk mengelola fitur pencarian dan filter beasiswa
+ */
 class BeasiswaController extends Controller
 {
+    /**
+     * Menampilkan daftar beasiswa dengan filter dan pencarian
+     */
     public function index(Request $request)
     {
         $query = Beasiswa::query();
@@ -26,7 +32,7 @@ class BeasiswaController extends Controller
             $query->where('negara', $request->negara);
         }
 
-        // Search
+        // Pencarian berdasarkan keyword
         if ($request->has('q') && $request->q != '') {
             $query->where(function($q) use ($request) {
                 $q->where('nama', 'like', '%' . $request->q . '%')
@@ -49,7 +55,7 @@ class BeasiswaController extends Controller
 
         $beasiswas = $query->paginate(12);
 
-        // Data untuk filter dropdown dengan fallback
+        // Data untuk filter dropdown
         $jenisBeasiswas = Beasiswa::select('jenis_beasiswa')
                                   ->distinct()
                                   ->whereNotNull('jenis_beasiswa')
@@ -86,6 +92,9 @@ class BeasiswaController extends Controller
         return view('beasiswa.index', compact('beasiswas', 'jenisBeasiswas', 'kategoris', 'negaras'));
     }
 
+    /**
+     * Menampilkan detail beasiswa
+     */
     public function show($id)
     {
         $beasiswa = Beasiswa::findOrFail($id);

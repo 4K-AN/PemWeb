@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Log;
 
 class ChatbotController extends Controller
 {
+    /**
+     * Menampilkan halaman chatbot konsultasi jurusan
+     */
     public function index()
     {
-        // Pastikan user sudah login, jika tidak redirect ke login
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk mengakses chatbot.');
         }
@@ -20,6 +22,9 @@ class ChatbotController extends Controller
         return view('chatbot.index');
     }
 
+    /**
+     * Memproses pesan dari user dan memberikan response dari Gemini AI
+     */
     public function sendMessage(Request $request)
     {
         $userMessage = $request->input('message');
@@ -30,7 +35,7 @@ class ChatbotController extends Controller
             return response()->json(['type' => 'text', 'reply' => 'CRITICAL ERROR: API Key kosong.']);
         }
 
-        // --- 1. ANALISIS RIWAYAT UNTUK REROLL ---
+        // Ekstrak jurusan yang sudah pernah disarankan dari history untuk fitur reroll
         $suggestedMajors = [];
         foreach ($history as $chat) {
             if ($chat['role'] === 'model') {
@@ -41,32 +46,31 @@ class ChatbotController extends Controller
         }
         $blacklistStr = !empty($suggestedMajors) ? implode(", ", array_unique($suggestedMajors)) : "Belum ada";
 
-        // --- 2. DETEKSI NIAT ---
+        // Deteksi intent dari pesan user
         $msg = strtolower($userMessage);
         $isAskingRecommendation = false;
         $isReroll = false;
 
-        // Deteksi Reroll (Eksplisit)
         if (preg_match('/(lain|beda|alternatif|lagi|reroll|selain itu)/i', $msg)) {
             $isAskingRecommendation = true;
             $isReroll = true;
         }
-        // Deteksi Minta Rekomendasi (Umum)
         elseif (preg_match('/(berikan|minta|cari|rekomendasi|saran|pilihkan|bantu|bingung|mohon|tolong).*(jurusan|prodi|kuliah|studi)/i', $msg) ||
                 preg_match('/(jurusan|prodi|kuliah).*(cocok|bagus|sesuai|apa|mana)/i', $msg)) {
             $isAskingRecommendation = true;
         }
 
-        // --- 3. KONFIGURASI GEMINI ---
+        // Konfigurasi endpoint Gemini AI
         $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
 
+        // Build conversation history
         $contents = [];
         foreach ($history as $chat) {
             $contents[] = ["role" => ($chat['role'] === 'user' ? 'user' : 'model'), "parts" => [["text" => $chat['text']]]];
         }
 
+        // Mode: Rekomendasi jurusan dengan analisis SWOT
         if ($isAskingRecommendation) {
-
             $rerollPrompt = "";
             if ($isReroll || !empty($suggestedMajors)) {
                 $rerollPrompt = "
@@ -77,7 +81,7 @@ class ChatbotController extends Controller
                 ";
             }
 
-            // --- Get user profile data untuk context ---
+            // Ambil data profil user untuk konteks rekomendasi
             $userContext = "";
             if (Auth::check()) {
                 $user = Auth::user();
@@ -128,6 +132,7 @@ class ChatbotController extends Controller
             ];
             $responseType = 'recommendation';
 
+        // Mode: Percakapan santai (general chat)
         } else {
             $systemPrompt = "Anda adalah Advizo. Jawab santai, singkat, dan suportif. Jangan kasih JSON kecuali diminta.";
             $contents[] = ["role" => "user", "parts" => [["text" => $userMessage . "\n\n(Instruksi: $systemPrompt)"]]];
@@ -135,6 +140,7 @@ class ChatbotController extends Controller
             $responseType = 'text';
         }
 
+        // Kirim request ke Gemini AI dan proses response
         try {
             $response = Http::withoutVerifying()->timeout(30)->post($url, $payload);
 
@@ -145,11 +151,12 @@ class ChatbotController extends Controller
             $responseBody = $response->json();
             $rawReply = $responseBody['candidates'][0]['content']['parts'][0]['text'] ?? '';
 
+            // Proses response rekomendasi jurusan
             if ($responseType === 'recommendation') {
                 $data = json_decode($rawReply, true);
 
                 if (json_last_error() === JSON_ERROR_NONE) {
-                    // Simpan ke database jika user sudah login
+                    // Simpan fiksasi jurusan ke database
                     if (Auth::check()) {
                         Fixation::create([
                             'user_id' => Auth::id(),
@@ -167,12 +174,13 @@ class ChatbotController extends Controller
 
                     return response()->json(['type' => 'recommendation', 'data' => $data]);
                 } else {
+                    // Fallback: cleaning JSON response
                     $cleanJson = str_replace(['```json', '```'], '', $rawReply);
                     $dataRetry = json_decode($cleanJson, true);
                     if (json_last_error() === JSON_ERROR_NONE) {
                          return response()->json(['type' => 'recommendation', 'data' => $dataRetry]);
                     }
-                    return response()->json(['type' => 'text', 'reply' => "DEBUG JSON ERROR:\n" . $rawReply]);
+                    return response()->json(['type' => 'text', 'reply' => "Error parsing JSON: " . $rawReply]);
                 }
             } else {
                 return response()->json(['type' => 'text', 'reply' => $rawReply]);
@@ -183,6 +191,9 @@ class ChatbotController extends Controller
         }
     }
 
+    /**
+     * Memberikan analisis mendalam tentang jurusan yang sudah difiksasi
+     */
     private function handleFixation($message, $conversationHistory)
     {
         $apiKey = env('GEMINI_API_KEY');
@@ -191,7 +202,7 @@ class ChatbotController extends Controller
             return response()->json(['type' => 'text', 'reply' => 'CRITICAL ERROR: API Key kosong.']);
         }
 
-        // --- 1. AMBIL DATA FIXATION ---
+        // Ambil data fiksasi terbaru dari user
         $fixation = Fixation::where('user_id', Auth::id())
             ->where('jurusan', '!=', '')
             ->orderBy('created_at', 'desc')
@@ -201,7 +212,7 @@ class ChatbotController extends Controller
             return response()->json(['type' => 'text', 'reply' => 'Tidak ada data fixation ditemukan.']);
         }
 
-        // --- 2. SIAPKAN PROMPT ---
+        // Siapkan prompt untuk analisis mendalam
         $prompt = "Kamu adalah seorang ahli pendidikan. Berdasarkan data berikut:\n\n";
         $prompt .= "Jurusan: {$fixation->jurusan}\n";
         $prompt .= "Deskripsi: {$fixation->deskripsi}\n";
