@@ -67,8 +67,6 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/kalender-akademik', [AkademikController::class, 'index'])->name('akademik.kalender');
 Route::get('/kalender-akademik/tanggal/{day}', [AkademikController::class, 'detail'])->name('akademik.kalender.detail');
 Route::get('/kalender-akademik/event/{id}', [AkademikController::class, 'showEvent'])->name('akademik.event.show');
-Route::post('/kalender-akademik/event/{id}/reminder', [AkademikController::class, 'setReminder'])->name('akademik.event.reminder');
-Route::delete('/kalender-akademik/event/{id}/reminder', [AkademikController::class, 'removeReminder'])->name('akademik.event.reminder.remove');
 
 // Simulasi Karir Routes
 Route::get('/simulasi-karir', [KarirController::class, 'index'])->name('simulasi.karir');
