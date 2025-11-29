@@ -79,16 +79,32 @@ GEMINI_API_KEY=your_gemini_api_key_here
 > 4. Copy dan paste ke `.env`
 
 ### Step 6: Jalankan Migration & Seeder
+
+**PENTING:** Jika ada error migration, ikuti langkah berikut:
+
 ```bash
-# Jalankan migration dan seeder sekaligus
-php artisan migrate --seed
+# Cara 1: Fresh Migrate (Rekomendasi untuk device baru)
+php artisan migrate:fresh --seed
+
+# Cara 2: Migrate biasa (jika sudah ada database)
+php artisan migrate
+php artisan db:seed
 ```
 
-> ⚠️ **Jika ada error migration:**
-> ```bash
-> # Gunakan fresh migrate (akan hapus semua data)
-> php artisan migrate:fresh --seed
-> ```
+**Jika error "Table already exists" atau "Column not found":**
+
+```bash
+# Hapus migration yang konflik dari database
+php artisan tinker
+
+# Lalu ketik:
+DB::table('migrations')->where('migration', 'like', '%add_fitur_to_tryouts%')->delete();
+DB::table('migrations')->where('migration', 'like', '%create_fixations%')->delete();
+exit
+
+# Jalankan migrate lagi
+php artisan migrate:fresh --seed
+```
 
 ### Step 7: Link Storage (Opsional)
 ```bash
@@ -313,21 +329,27 @@ exit
 ```
 
 ### Error: "Table 'tryouts' doesn't exist" saat migrate
+
+**Penyebab:** Migration mencoba menambahkan kolom ke tabel yang belum dibuat.
+
+**Solusi:**
+
+1. Hapus migration yang error:
 ```bash
-# Ini terjadi karena ada migration lama yang konflik
-
-# Solusi:
-# 1. Hapus migration yang error (manual):
-#    database/migrations/*_add_fitur_to_tryouts_table.php
-
-# 2. Atau skip migration otomatis:
+# Via tinker:
 php artisan tinker
 
 # Lalu ketik:
-DB::table('migrations')->where('migration', 'like', '%add_fitur_to_tryouts_table%')->delete();
+DB::table('migrations')->where('migration', 'like', '%add_fitur_to_tryouts%')->delete();
+DB::table('migrations')->where('migration', 'like', '%create_fixations%')->delete();
 exit
 
-# 3. Jalankan migrate lagi:
+# Atau hapus manual file migration yang error
+# Di folder database/migrations/
+```
+
+2. Jalankan migrate lagi:
+```bash
 php artisan migrate:fresh --seed
 ```
 
