@@ -47,18 +47,19 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * Get the fixations for the user.
+     */
     public function fixations()
     {
         return $this->hasMany(Fixation::class);
     }
 
+    /**
+     * Get the latest fixation for the user.
+     */
     public function latestFixation()
     {
         return $this->fixations()->latest()->first();
-    }
-
-    public function eventReminders()
-    {
-        return $this->hasMany(EventReminder::class);
     }
 }

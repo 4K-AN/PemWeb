@@ -75,20 +75,12 @@
         <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Aktivitas Saya</h2>
 
-            <div class="grid md:grid-cols-3 gap-6">
+            <div class="grid md:grid-cols-2 gap-6">
                 <div class="bg-gradient-to-br from-[#F0F9F7] to-white p-6 rounded-xl border border-[#3B8773]/10">
                     <div class="text-3xl mb-3">📚</div>
                     <h3 class="font-bold text-gray-900 mb-1">Jurusan Difiksasi</h3>
                     <p class="text-2xl font-bold text-[#3B8773]">
                         {{ $user->latestFixation() ? '1' : '0' }}
-                    </p>
-                </div>
-
-                <div class="bg-gradient-to-br from-[#F0F9F7] to-white p-6 rounded-xl border border-[#3B8773]/10">
-                    <div class="text-3xl mb-3">🔔</div>
-                    <h3 class="font-bold text-gray-900 mb-1">Reminder Aktif</h3>
-                    <p class="text-2xl font-bold text-[#3B8773]">
-                        {{ $user->eventReminders()->count() }}
                     </p>
                 </div>
 
