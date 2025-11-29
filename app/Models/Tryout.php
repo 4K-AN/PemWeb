@@ -21,6 +21,9 @@ class Tryout extends Model
         'biaya',
         'link_pendaftaran',
         'deadline_pendaftaran',
+        'dengan_pembahasan',
+        'dengan_sertifikat',
+        'dengan_ranking',
         'is_active'
     ];
 
@@ -28,6 +31,9 @@ class Tryout extends Model
         'tanggal_pelaksanaan' => 'date',
         'deadline_pendaftaran' => 'date',
         'biaya' => 'decimal:2',
+        'dengan_pembahasan' => 'boolean',
+        'dengan_sertifikat' => 'boolean',
+        'dengan_ranking' => 'boolean',
         'is_active' => 'boolean'
     ];
 }

@@ -7,8 +7,8 @@
     <div class="bg-white rounded-2xl shadow-xl p-10 border border-green-100">
         <div class="flex items-start gap-6 mb-8">
             @if($beasiswa->gambar)
-            <img 
-                src="{{ asset('storage/' . $beasiswa->gambar) }}" 
+            <img
+                src="{{ asset('storage/' . $beasiswa->gambar) }}"
                 alt="{{ $beasiswa->nama }}"
                 class="w-32 h-40 object-cover rounded-xl"
             >
@@ -17,7 +17,7 @@
                 🎓
             </div>
             @endif
-            
+
             <div class="flex-1">
                 <h1 class="text-4xl font-bold text-gray-800 mb-4">{{ $beasiswa->nama }}</h1>
                 <div class="flex flex-wrap gap-3 mb-4">
@@ -33,10 +33,10 @@
                 </div>
                 <p class="text-gray-600 text-lg mb-4">{{ $beasiswa->universitas }}</p>
                 <p class="text-red-600 font-semibold">
-                    Deadline: {{ $beasiswa->deadline->format('d F Y') }}
+                    Deadline: {{ $beasiswa->deadline ? $beasiswa->deadline->format('d F Y') : 'Belum ditentukan' }}
                 </p>
                 <p class="text-green-600 font-semibold mt-2">
-                    IPK Minimal: {{ $beasiswa->ipk_minimal }}
+                    IPK Minimal: {{ $beasiswa->ipk_minimal ?? 'Tidak ada persyaratan' }}
                 </p>
             </div>
         </div>
@@ -47,7 +47,7 @@
         </div>
 
         <div class="flex gap-4">
-            <a 
+            <a
                 href="{{ route('beasiswa.index') }}"
                 class="flex-1 bg-gray-200 text-gray-700 py-4 rounded-xl hover:bg-gray-300 transition text-center font-bold"
             >
