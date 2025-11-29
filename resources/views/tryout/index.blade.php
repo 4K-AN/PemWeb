@@ -14,13 +14,13 @@
 
     <div class="max-w-6xl mx-auto px-6 py-12">
         <!-- Search & Filter -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-8 border border-gray-100">
             <form action="{{ route('tryout.index') }}" method="GET" id="filter-form">
                 <!-- Main Search Bar -->
-                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
                     <input type="text" name="q" value="{{ request('q') }}"
                            placeholder="Cari tryout berdasarkan nama atau penyelenggara..."
-                           class="flex-1 px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium text-gray-700">
+                           class="flex-1 px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium text-gray-700 placeholder-gray-400">
 
                     <button type="button" onclick="toggleFilters()"
                             class="px-6 py-3.5 bg-gray-100 border-2 border-gray-200 text-gray-700 rounded-xl font-bold hover:bg-[#E8F5F3] hover:border-[#3B8773] hover:text-[#3B8773] transition flex items-center justify-center gap-2">
@@ -32,109 +32,147 @@
                     </button>
 
                     <button type="submit"
-                            class="px-8 py-3.5 bg-[#3B8773] text-white rounded-xl font-bold hover:bg-[#2E6B5B] transition shadow-md">
-                        Cari
+                            class="px-8 py-3.5 bg-[#3B8773] text-white rounded-xl font-bold hover:bg-[#2E6B5B] transition shadow-md flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <span class="hidden md:inline">Cari</span>
                     </button>
                 </div>
 
                 <!-- Collapsible Filters -->
-                <div id="filter-section" class="hidden mt-6 pt-6 border-t border-gray-200">
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                        <!-- Jenis Ujian -->
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-3">Jenis Ujian</label>
-                            <select name="kategori" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium">
-                                <option value="">Semua Jenis</option>
-                                @if($kategoris && $kategoris->count() > 0)
-                                    @foreach($kategoris as $kat)
-                                        <option value="{{ $kat }}" {{ request('kategori') == $kat ? 'selected' : '' }}>{{ $kat }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <!-- Lokasi -->
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-3">Lokasi</label>
-                            <select name="lokasi" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium">
-                                <option value="">Semua Lokasi</option>
-                                @if($lokasis && $lokasis->count() > 0)
-                                    @foreach($lokasis as $lok)
-                                        <option value="{{ $lok }}" {{ request('lokasi') == $lok ? 'selected' : '' }}>{{ $lok }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <!-- Waktu Pelaksanaan -->
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-3">Waktu Pelaksanaan</label>
-                            <select name="waktu" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium">
-                                <option value="">Semua Waktu</option>
-                                <option value="minggu_ini" {{ request('waktu') == 'minggu_ini' ? 'selected' : '' }}>Minggu Ini</option>
-                                <option value="bulan_ini" {{ request('waktu') == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
-                                <option value="bulan_depan" {{ request('waktu') == 'bulan_depan' ? 'selected' : '' }}>Bulan Depan</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Fitur Filter (Checkbox) -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-bold text-gray-700 mb-3">Fitur Tambahan</label>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer {{ request('gratis') ? 'bg-[#E8F5F3] border-[#3B8773]' : '' }}">
-                                <input type="checkbox" name="gratis" value="1" {{ request('gratis') ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] rounded">
-                                <span class="text-sm font-medium text-gray-700">Gratis</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer {{ request('pembahasan') ? 'bg-[#E8F5F3] border-[#3B8773]' : '' }}">
-                                <input type="checkbox" name="pembahasan" value="1" {{ request('pembahasan') ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] rounded">
-                                <span class="text-sm font-medium text-gray-700">Dengan Pembahasan</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer {{ request('sertifikat') ? 'bg-[#E8F5F3] border-[#3B8773]' : '' }}">
-                                <input type="checkbox" name="sertifikat" value="1" {{ request('sertifikat') ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] rounded">
-                                <span class="text-sm font-medium text-gray-700">Dengan Sertifikat</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer {{ request('ranking') ? 'bg-[#E8F5F3] border-[#3B8773]' : '' }}">
-                                <input type="checkbox" name="ranking" value="1" {{ request('ranking') ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] rounded">
-                                <span class="text-sm font-medium text-gray-700">Ranking Nasional</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Sorting -->
-                    <div class="grid md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-3">Urutkan Berdasarkan</label>
-                            <select name="sort" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium">
-                                <option value="tanggal_pelaksanaan" {{ request('sort') == 'tanggal_pelaksanaan' ? 'selected' : '' }}>Tanggal Pelaksanaan</option>
-                                <option value="deadline_pendaftaran" {{ request('sort') == 'deadline_pendaftaran' ? 'selected' : '' }}>Deadline Pendaftaran</option>
-                                <option value="biaya" {{ request('sort') == 'biaya' ? 'selected' : '' }}>Biaya</option>
-                                <option value="nama_tryout" {{ request('sort') == 'nama_tryout' ? 'selected' : '' }}>Nama Tryout</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-3">Urutan</label>
-                            <div class="flex gap-3">
-                                <label class="flex-1 flex items-center justify-center gap-2 p-3 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer {{ request('order', 'asc') == 'asc' ? 'bg-[#E8F5F3] border-[#3B8773]' : '' }}">
-                                    <input type="radio" name="order" value="asc" {{ request('order', 'asc') == 'asc' ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773]">
-                                    <span class="text-sm font-medium text-gray-700">Naik</span>
+                <div id="filter-section" class="hidden">
+                    <div class="border-t border-gray-200 pt-6 space-y-6">
+                        <!-- Filter Grid -->
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <!-- Jenis Ujian -->
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    Jenis Ujian
                                 </label>
-                                <label class="flex-1 flex items-center justify-center gap-2 p-3 border-2 border-gray-200 rounded-xl hover:border-[#3B8773] transition cursor-pointer {{ request('order') == 'desc' ? 'bg-[#E8F5F3] border-[#3B8773]' : '' }}">
-                                    <input type="radio" name="order" value="desc" {{ request('order') == 'desc' ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773]">
-                                    <span class="text-sm font-medium text-gray-700">Turun</span>
+                                <select name="kategori" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium text-gray-700 bg-white">
+                                    <option value="">Semua Jenis</option>
+                                    @if($kategoris && $kategoris->count() > 0)
+                                        @foreach($kategoris as $kat)
+                                            <option value="{{ $kat }}" {{ request('kategori') == $kat ? 'selected' : '' }}>{{ $kat }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            <!-- Lokasi -->
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    </svg>
+                                    Lokasi
+                                </label>
+                                <select name="lokasi" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium text-gray-700 bg-white">
+                                    <option value="">Semua Lokasi</option>
+                                    @if($lokasis && $lokasis->count() > 0)
+                                        @foreach($lokasis as $lok)
+                                            <option value="{{ $lok }}" {{ request('lokasi') == $lok ? 'selected' : '' }}>{{ $lok }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            <!-- Waktu Pelaksanaan -->
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Waktu Pelaksanaan
+                                </label>
+                                <select name="waktu" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium text-gray-700 bg-white">
+                                    <option value="">Semua Waktu</option>
+                                    <option value="minggu_ini" {{ request('waktu') == 'minggu_ini' ? 'selected' : '' }}>Minggu Ini</option>
+                                    <option value="bulan_ini" {{ request('waktu') == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
+                                    <option value="bulan_depan" {{ request('waktu') == 'bulan_depan' ? 'selected' : '' }}>Bulan Depan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Fitur Filter (Checkbox) -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-3">Fitur Tambahan</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <label class="flex items-center gap-3 p-4 border-2 {{ request('gratis') ? 'border-[#3B8773] bg-[#E8F5F3]' : 'border-gray-200' }} rounded-xl hover:border-[#3B8773] transition cursor-pointer">
+                                    <input type="checkbox" name="gratis" value="1" {{ request('gratis') ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] rounded border-gray-300 focus:ring-[#3B8773]">
+                                    <span class="text-sm font-medium text-gray-700">Gratis</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-4 border-2 {{ request('pembahasan') ? 'border-[#3B8773] bg-[#E8F5F3]' : 'border-gray-200' }} rounded-xl hover:border-[#3B8773] transition cursor-pointer">
+                                    <input type="checkbox" name="pembahasan" value="1" {{ request('pembahasan') ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] rounded border-gray-300 focus:ring-[#3B8773]">
+                                    <span class="text-sm font-medium text-gray-700">Dengan Pembahasan</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-4 border-2 {{ request('sertifikat') ? 'border-[#3B8773] bg-[#E8F5F3]' : 'border-gray-200' }} rounded-xl hover:border-[#3B8773] transition cursor-pointer">
+                                    <input type="checkbox" name="sertifikat" value="1" {{ request('sertifikat') ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] rounded border-gray-300 focus:ring-[#3B8773]">
+                                    <span class="text-sm font-medium text-gray-700">Dengan Sertifikat</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-4 border-2 {{ request('ranking') ? 'border-[#3B8773] bg-[#E8F5F3]' : 'border-gray-200' }} rounded-xl hover:border-[#3B8773] transition cursor-pointer">
+                                    <input type="checkbox" name="ranking" value="1" {{ request('ranking') ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] rounded border-gray-300 focus:ring-[#3B8773]">
+                                    <span class="text-sm font-medium text-gray-700">Ranking Nasional</span>
                                 </label>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Action Buttons -->
-                    <div class="flex gap-4">
-                        <button type="submit" class="flex-1 bg-[#3B8773] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#2E6B5B] transition">
-                            Terapkan Filter
-                        </button>
-                        <a href="{{ route('tryout.index') }}" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition">
-                            Reset
-                        </a>
+                        <!-- Sorting -->
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-[#3B8773]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"></path>
+                                    </svg>
+                                    Urutkan Berdasarkan
+                                </label>
+                                <select name="sort" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition font-medium text-gray-700 bg-white">
+                                    <option value="tanggal_pelaksanaan" {{ request('sort') == 'tanggal_pelaksanaan' ? 'selected' : '' }}>Tanggal Pelaksanaan</option>
+                                    <option value="deadline_pendaftaran" {{ request('sort') == 'deadline_pendaftaran' ? 'selected' : '' }}>Deadline Pendaftaran</option>
+                                    <option value="biaya" {{ request('sort') == 'biaya' ? 'selected' : '' }}>Biaya</option>
+                                    <option value="nama_tryout" {{ request('sort') == 'nama_tryout' ? 'selected' : '' }}>Nama Tryout</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-3">Urutan</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="flex items-center justify-center gap-2 p-3 border-2 {{ request('order', 'asc') == 'asc' ? 'border-[#3B8773] bg-[#E8F5F3]' : 'border-gray-200' }} rounded-xl hover:border-[#3B8773] transition cursor-pointer">
+                                        <input type="radio" name="order" value="asc" {{ request('order', 'asc') == 'asc' ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] border-gray-300 focus:ring-[#3B8773]">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                        </svg>
+                                        <span class="text-sm font-medium text-gray-700">Naik</span>
+                                    </label>
+                                    <label class="flex items-center justify-center gap-2 p-3 border-2 {{ request('order') == 'desc' ? 'border-[#3B8773] bg-[#E8F5F3]' : 'border-gray-200' }} rounded-xl hover:border-[#3B8773] transition cursor-pointer">
+                                        <input type="radio" name="order" value="desc" {{ request('order') == 'desc' ? 'checked' : '' }} class="w-4 h-4 text-[#3B8773] border-gray-300 focus:ring-[#3B8773]">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                        <span class="text-sm font-medium text-gray-700">Turun</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 pt-4">
+                            <button type="submit" class="flex-1 bg-[#3B8773] text-white px-6 py-3.5 rounded-xl font-bold hover:bg-[#2E6B5B] transition flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Terapkan Filter
+                            </button>
+                            <a href="{{ route('tryout.index') }}" class="px-6 py-3.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Reset
+                            </a>
+                        </div>
                     </div>
                 </div>
             </form>

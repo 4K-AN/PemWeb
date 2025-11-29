@@ -11,7 +11,12 @@ class BeasiswaController extends Controller
     {
         $query = Beasiswa::query();
 
-        // Filter berdasarkan kategori
+        // Filter berdasarkan jenis beasiswa
+        if ($request->has('jenis') && $request->jenis != '') {
+            $query->where('jenis_beasiswa', $request->jenis);
+        }
+
+        // Filter berdasarkan kategori/bidang studi
         if ($request->has('kategori') && $request->kategori != '') {
             $query->where('kategori', $request->kategori);
         }
@@ -24,35 +29,66 @@ class BeasiswaController extends Controller
         // Search
         if ($request->has('q') && $request->q != '') {
             $query->where(function($q) use ($request) {
-                $q->where('nama_beasiswa', 'like', '%' . $request->q . '%')
+                $q->where('nama', 'like', '%' . $request->q . '%')
                   ->orWhere('universitas', 'like', '%' . $request->q . '%')
-                  ->orWhere('jurusan', 'like', '%' . $request->q . '%')
                   ->orWhere('deskripsi', 'like', '%' . $request->q . '%');
             });
         }
 
         // Sorting
-        $sortBy = $request->get('sort', 'created_at');
-        $sortOrder = $request->get('order', 'desc');
-        $query->orderBy($sortBy, $sortOrder);
+        $sortBy = $request->get('sort', 'deadline');
+        $sortOrder = $request->get('order', 'asc');
+
+        if ($sortBy == 'deadline') {
+            $query->orderByRaw('deadline IS NULL, deadline ' . $sortOrder);
+        } elseif ($sortBy == 'nama_beasiswa') {
+            $query->orderBy('nama', $sortOrder);
+        } else {
+            $query->orderBy($sortBy, $sortOrder);
+        }
 
         $beasiswas = $query->paginate(12);
 
-        // Data untuk filter dropdown
-        $kategoris = Beasiswa::select('kategori')->distinct()->whereNotNull('kategori')->pluck('kategori');
-        $negaras = Beasiswa::select('negara')->distinct()->pluck('negara');
+        // Data untuk filter dropdown dengan fallback
+        $jenisBeasiswas = Beasiswa::select('jenis_beasiswa')
+                                  ->distinct()
+                                  ->whereNotNull('jenis_beasiswa')
+                                  ->where('jenis_beasiswa', '!=', '')
+                                  ->orderBy('jenis_beasiswa')
+                                  ->pluck('jenis_beasiswa');
 
-        return view('beasiswa.index', compact('beasiswas', 'kategoris', 'negaras'));
+        if ($jenisBeasiswas->isEmpty()) {
+            $jenisBeasiswas = collect(['Beasiswa Penuh', 'Beasiswa Parsial', 'Beasiswa Prestasi', 'KIP Kuliah']);
+        }
+
+        $kategoris = Beasiswa::select('kategori')
+                            ->distinct()
+                            ->whereNotNull('kategori')
+                            ->where('kategori', '!=', '')
+                            ->orderBy('kategori')
+                            ->pluck('kategori');
+
+        if ($kategoris->isEmpty()) {
+            $kategoris = collect(['Sains & Teknologi', 'Sosial & Humaniora', 'Kesehatan', 'Teknik', 'Ekonomi & Bisnis']);
+        }
+
+        $negaras = Beasiswa::select('negara')
+                          ->distinct()
+                          ->whereNotNull('negara')
+                          ->where('negara', '!=', '')
+                          ->orderBy('negara')
+                          ->pluck('negara');
+
+        if ($negaras->isEmpty()) {
+            $negaras = collect(['Indonesia', 'Jepang', 'Korea', 'Belanda', 'Amerika', 'Australia']);
+        }
+
+        return view('beasiswa.index', compact('beasiswas', 'jenisBeasiswas', 'kategoris', 'negaras'));
     }
 
     public function show($id)
     {
         $beasiswa = Beasiswa::findOrFail($id);
         return view('beasiswa.show', compact('beasiswa'));
-    }
-
-    public function search(Request $request)
-    {
-        return $this->index($request);
     }
 }

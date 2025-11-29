@@ -2,29 +2,39 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Beasiswa extends Model
 {
-    protected $table = 'beasiswas';
-    
+    use HasFactory;
+
     protected $fillable = [
-        'nama',
-        'jurusan',
-        'universitas',
-        'status',
-        'jenjang',
-        'ipk_minimal',
+        'nama_beasiswa',
         'deskripsi',
-        'gambar',
-        'is_popular',
-        'deadline'
+        'universitas',
+        'jenis_beasiswa',
+        'jenjang',
+        'kategori',
+        'negara',
+        'status',
+        'deadline',
+        'ipk_minimal',
+        'benefit_biaya_kuliah',
+        'benefit_biaya_hidup',
+        'benefit_tiket_pesawat',
+        'benefit_asuransi',
+        'link_pendaftaran',
+        'gambar'
     ];
 
     protected $casts = [
         'deadline' => 'date',
-        'is_popular' => 'boolean',
-        'ipk_minimal' => 'decimal:2'
+        'ipk_minimal' => 'decimal:2',
+        'benefit_biaya_kuliah' => 'boolean',
+        'benefit_biaya_hidup' => 'boolean',
+        'benefit_tiket_pesawat' => 'boolean',
+        'benefit_asuransi' => 'boolean',
     ];
 
     // Scope untuk filter

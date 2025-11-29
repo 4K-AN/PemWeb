@@ -6,23 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            // Tambahkan kolom tanpa 'after' - akan ditambahkan di akhir tabel
+            // Tambahkan kolom interests_talents tanpa 'after'
             if (!Schema::hasColumn('users', 'interests_talents')) {
                 $table->text('interests_talents')->nullable()->comment('Deskripsi minat dan bakat siswa');
             }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('users', function (Blueprint $table) {
             if (Schema::hasColumn('users', 'interests_talents')) {
