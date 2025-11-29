@@ -102,7 +102,7 @@ set /p confirm="Lanjutkan? (y/n): "
 if /i not "%confirm%"=="y" goto END
 
 echo.
-echo [1/3] Dropping all tables...
+echo [1/4] Dropping all tables...
 call php artisan migrate:fresh
 if errorlevel 1 (
     echo [ERROR] Fresh migrate gagal!
@@ -111,30 +111,45 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/3] Running seeders...
+echo [2/4] Running Tryout Seeder...
 call php artisan db:seed --class=TryoutSeeder
-call php artisan db:seed --class=BeasiswaSeeder
-call php artisan db:seed --class=AcademicEventSeeder
 if errorlevel 1 (
-    echo [ERROR] Seeder gagal!
-    pause
-    exit /b 1
+    echo [WARNING] Tryout seeder gagal, melanjutkan...
 )
 
 echo.
-echo [3/3] Clearing cache...
+echo [3/4] Running Beasiswa Seeder...
+call php artisan db:seed --class=BeasiswaSeeder
+if errorlevel 1 (
+    echo [WARNING] Beasiswa seeder gagal, melanjutkan...
+)
+
+echo.
+echo [4/4] Running Academic Event Seeder...
+call php artisan db:seed --class=AcademicEventSeeder
+if errorlevel 1 (
+    echo [WARNING] Academic Event seeder gagal, melanjutkan...
+)
+
+echo.
+echo [5/5] Clearing cache...
 call php artisan config:clear >nul 2>&1
 call php artisan cache:clear >nul 2>&1
 call php artisan view:clear >nul 2>&1
+call php artisan route:clear >nul 2>&1
 
 echo.
 color 0A
-echo [SUCCESS] Database berhasil di-setup!
+echo ========================================
+echo   DATABASE SETUP BERHASIL!
+echo ========================================
 echo.
 echo Data yang tersedia:
-echo - Tryout: 10+ data
-echo - Beasiswa: 15+ data
-echo - Kalender Akademik: 30+ event
+echo - Tryout        : 10+ data tryout (UTBK, SNBT, dll)
+echo - Beasiswa      : 15+ data beasiswa (dalam & luar negeri)
+echo - Kalender      : 30+ event akademik (Maret-Mei 2025)
+echo.
+echo Database siap digunakan!
 echo.
 goto END
 
@@ -171,23 +186,59 @@ echo   SEED DATABASE
 echo ========================================
 echo.
 echo Pilih seeder:
-echo 1. Tryout Seeder
-echo 2. Beasiswa Seeder
-echo 3. Academic Event Seeder
+echo 1. Tryout Seeder (10+ data tryout)
+echo 2. Beasiswa Seeder (15+ data beasiswa)
+echo 3. Academic Event Seeder (30+ event)
 echo 4. Semua Seeder
 echo.
 set /p seedchoice="Pilihan (1-4): "
 
 if "%seedchoice%"=="1" (
+    echo.
+    echo [INFO] Running Tryout Seeder...
     call php artisan db:seed --class=TryoutSeeder
+    if errorlevel 1 (
+        echo [ERROR] Seeder gagal!
+        pause
+        exit /b 1
+    )
+    echo [SUCCESS] Tryout Seeder berhasil! (10+ data ditambahkan)
 ) else if "%seedchoice%"=="2" (
+    echo.
+    echo [INFO] Running Beasiswa Seeder...
     call php artisan db:seed --class=BeasiswaSeeder
+    if errorlevel 1 (
+        echo [ERROR] Seeder gagal!
+        pause
+        exit /b 1
+    )
+    echo [SUCCESS] Beasiswa Seeder berhasil! (15+ data ditambahkan)
 ) else if "%seedchoice%"=="3" (
+    echo.
+    echo [INFO] Running Academic Event Seeder...
     call php artisan db:seed --class=AcademicEventSeeder
+    if errorlevel 1 (
+        echo [ERROR] Seeder gagal!
+        pause
+        exit /b 1
+    )
+    echo [SUCCESS] Academic Event Seeder berhasil! (30+ data ditambahkan)
 ) else if "%seedchoice%"=="4" (
+    echo.
+    echo [INFO] Running All Seeders...
     call php artisan db:seed --class=TryoutSeeder
     call php artisan db:seed --class=BeasiswaSeeder
     call php artisan db:seed --class=AcademicEventSeeder
+    if errorlevel 1 (
+        echo [ERROR] Seeder gagal!
+        pause
+        exit /b 1
+    )
+    echo.
+    echo [SUCCESS] Semua Seeder berhasil!
+    echo - Tryout: 10+ data
+    echo - Beasiswa: 15+ data
+    echo - Kalender: 30+ event
 ) else (
     echo [ERROR] Pilihan tidak valid!
     pause
@@ -195,8 +246,6 @@ if "%seedchoice%"=="1" (
 )
 
 echo.
-color 0A
-echo [SUCCESS] Seeder berhasil dijalankan!
 goto END
 
 :END
@@ -204,5 +253,7 @@ echo.
 echo ========================================
 echo   Setup Selesai
 echo ========================================
+echo.
+echo Terima kasih telah menggunakan Edvizo Database Setup!
 echo.
 pause
