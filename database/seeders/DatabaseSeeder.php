@@ -23,6 +23,12 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('123'),
         ]);
 
-        $this->call(BeasiswaSeeder::class);
+        // Panggil semua seeder
+        $this->call([
+            BeasiswaSeeder::class,
+            AcademicEventSeeder::class,
+            TryoutSeeder::class,
+            ProfileTestSeeder::class,
+        ]);
     }
 }
