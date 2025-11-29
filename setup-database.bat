@@ -8,22 +8,26 @@ echo.
 
 REM Cek apakah .env sudah ada
 if not exist .env (
+    color 0C
     echo [ERROR] File .env tidak ditemukan!
     echo.
     echo Silakan jalankan:
     echo   copy .env.example .env
     echo.
     echo Lalu konfigurasi database di file .env
+    echo.
     pause
     exit /b 1
 )
 
+echo [INFO] File .env ditemukan
 echo [INFO] Memeriksa koneksi database...
-php artisan config:clear >nul 2>&1
+call php artisan config:clear >nul 2>&1
 
 REM Test koneksi database
-php artisan db:show >nul 2>&1
+call php artisan db:show >nul 2>&1
 if errorlevel 1 (
+    color 0C
     echo [ERROR] Tidak dapat terhubung ke database!
     echo.
     echo Pastikan:
@@ -31,15 +35,17 @@ if errorlevel 1 (
     echo 2. Database sudah dibuat (nama: edvizo_db atau sesuai .env)
     echo 3. Konfigurasi .env sudah benar
     echo.
-    pause
+    echo Tekan tombol apa saja untuk keluar...
+    pause >nul
     exit /b 1
 )
 
+color 0A
 echo [OK] Koneksi database berhasil!
 echo.
 
 echo [INFO] Memeriksa kondisi database...
-php artisan migrate:status >nul 2>&1
+call php artisan migrate:status >nul 2>&1
 
 if errorlevel 1 (
     echo [DETECT] Database kosong atau belum pernah di-migrate
@@ -52,8 +58,9 @@ if errorlevel 1 (
 )
 
 REM Cek apakah ada migration pending
-php artisan migrate:status | findstr /C:"Pending" >nul 2>&1
+call php artisan migrate:status | findstr /C:"Pending" >nul 2>&1
 if not errorlevel 1 (
+    color 0E
     echo [DETECT] Ada migration pending atau error terdeteksi!
     echo.
     echo Pilih aksi:
@@ -68,10 +75,11 @@ if not errorlevel 1 (
     if "%choice%"=="3" goto END
     echo [ERROR] Pilihan tidak valid!
     pause
-    exit /b 1
+    goto END
 )
 
 REM Database normal, beri pilihan
+color 0A
 echo [DETECT] Database sudah ada dan terlihat normal
 echo.
 echo Pilih aksi:
@@ -88,7 +96,7 @@ if "%choice%"=="3" goto SEED_ONLY
 if "%choice%"=="4" goto END
 echo [ERROR] Pilihan tidak valid!
 pause
-exit /b 1
+goto END
 
 :FRESH_INSTALL
 echo.
@@ -96,38 +104,45 @@ echo ========================================
 echo   FRESH MIGRATE + SEED
 echo ========================================
 echo.
+color 0C
 echo [WARNING] Semua data akan dihapus!
 echo.
 set /p confirm="Lanjutkan? (y/n): "
 if /i not "%confirm%"=="y" goto END
 
+color 0E
 echo.
-echo [1/4] Dropping all tables...
+echo [1/5] Dropping all tables...
 call php artisan migrate:fresh
 if errorlevel 1 (
+    color 0C
     echo [ERROR] Fresh migrate gagal!
+    echo.
     pause
-    exit /b 1
+    goto END
 )
 
 echo.
-echo [2/4] Running Tryout Seeder...
+echo [2/5] Running Tryout Seeder...
 call php artisan db:seed --class=TryoutSeeder
 if errorlevel 1 (
+    color 0E
     echo [WARNING] Tryout seeder gagal, melanjutkan...
 )
 
 echo.
-echo [3/4] Running Beasiswa Seeder...
+echo [3/5] Running Beasiswa Seeder...
 call php artisan db:seed --class=BeasiswaSeeder
 if errorlevel 1 (
+    color 0E
     echo [WARNING] Beasiswa seeder gagal, melanjutkan...
 )
 
 echo.
-echo [4/4] Running Academic Event Seeder...
+echo [4/5] Running Academic Event Seeder...
 call php artisan db:seed --class=AcademicEventSeeder
 if errorlevel 1 (
+    color 0E
     echo [WARNING] Academic Event seeder gagal, melanjutkan...
 )
 
@@ -146,11 +161,12 @@ echo ========================================
 echo.
 echo Data yang tersedia:
 echo - Tryout        : 10+ data tryout (UTBK, SNBT, dll)
-echo - Beasiswa      : 15+ data beasiswa (dalam & luar negeri)
+echo - Beasiswa      : 15+ data beasiswa (dalam ^& luar negeri)
 echo - Kalender      : 30+ event akademik (Maret-Mei 2025)
 echo.
 echo Database siap digunakan!
 echo.
+pause
 goto END
 
 :NORMAL_MIGRATE
@@ -162,11 +178,13 @@ echo.
 echo [INFO] Menjalankan migration...
 call php artisan migrate
 if errorlevel 1 (
+    color 0C
     echo [ERROR] Migration gagal!
     echo.
     echo Saran: Gunakan Fresh Migrate untuk fix error
+    echo.
     pause
-    exit /b 1
+    goto END
 )
 
 echo.
@@ -177,6 +195,8 @@ call php artisan cache:clear >nul 2>&1
 echo.
 color 0A
 echo [SUCCESS] Migration berhasil!
+echo.
+pause
 goto END
 
 :SEED_ONLY
@@ -198,30 +218,36 @@ if "%seedchoice%"=="1" (
     echo [INFO] Running Tryout Seeder...
     call php artisan db:seed --class=TryoutSeeder
     if errorlevel 1 (
+        color 0C
         echo [ERROR] Seeder gagal!
         pause
-        exit /b 1
+        goto END
     )
+    color 0A
     echo [SUCCESS] Tryout Seeder berhasil! (10+ data ditambahkan)
 ) else if "%seedchoice%"=="2" (
     echo.
     echo [INFO] Running Beasiswa Seeder...
     call php artisan db:seed --class=BeasiswaSeeder
     if errorlevel 1 (
+        color 0C
         echo [ERROR] Seeder gagal!
         pause
-        exit /b 1
+        goto END
     )
+    color 0A
     echo [SUCCESS] Beasiswa Seeder berhasil! (15+ data ditambahkan)
 ) else if "%seedchoice%"=="3" (
     echo.
     echo [INFO] Running Academic Event Seeder...
     call php artisan db:seed --class=AcademicEventSeeder
     if errorlevel 1 (
+        color 0C
         echo [ERROR] Seeder gagal!
         pause
-        exit /b 1
+        goto END
     )
+    color 0A
     echo [SUCCESS] Academic Event Seeder berhasil! (30+ data ditambahkan)
 ) else if "%seedchoice%"=="4" (
     echo.
@@ -230,22 +256,26 @@ if "%seedchoice%"=="1" (
     call php artisan db:seed --class=BeasiswaSeeder
     call php artisan db:seed --class=AcademicEventSeeder
     if errorlevel 1 (
+        color 0C
         echo [ERROR] Seeder gagal!
         pause
-        exit /b 1
+        goto END
     )
     echo.
+    color 0A
     echo [SUCCESS] Semua Seeder berhasil!
     echo - Tryout: 10+ data
     echo - Beasiswa: 15+ data
     echo - Kalender: 30+ event
 ) else (
+    color 0C
     echo [ERROR] Pilihan tidak valid!
     pause
-    exit /b 1
+    goto END
 )
 
 echo.
+pause
 goto END
 
 :END
@@ -256,4 +286,6 @@ echo ========================================
 echo.
 echo Terima kasih telah menggunakan Edvizo Database Setup!
 echo.
-pause
+echo Tekan tombol apa saja untuk keluar...
+pause >nul
+exit /b 0
