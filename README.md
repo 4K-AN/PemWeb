@@ -90,8 +90,8 @@ CREATE TABLE beasiswas (
     negara VARCHAR(255) NOT NULL,
     status VARCHAR(50) NULL,
     deadline DATE NULL,
-    ipk_minimal DECIMAL(3,2) NULL,
     jurusan VARCHAR(255) NULL,
+    link_pendaftaran VARCHAR(255) NULL,
     gambar VARCHAR(255) NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL
@@ -215,11 +215,26 @@ GEMINI_API_KEY=your_api_key_here
 ```
 
 ### 6. Setup Database
+**Menggunakan Script Helper (Recommended):**
+```bash
+# Windows
+setup-database.bat
 
+# Linux/Mac
+chmod +x setup-database.sh
+./setup-database.sh
+```
+
+**Atau Manual:**
 ```bash
 php artisan migrate:fresh --seed
 ```
-Berfungsi untuk segala situasi.
+
+Script akan:
+- Membuat semua tabel yang diperlukan
+- Mengisi data dummy untuk Beasiswa (15+ data untuk mahasiswa baru)
+- Mengisi data dummy untuk Tryout (10+ data)
+- Mengisi data dummy untuk Kalender Akademik (30+ event)
 
 ### 7. Build Assets
 ```bash

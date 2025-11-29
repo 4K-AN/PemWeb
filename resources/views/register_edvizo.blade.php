@@ -3,85 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edvizo Register</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Daftar - Edvizo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
-<body>
-
-    <div class="container">
-        <div class="login-card">
-            
-            <div class="left-panel">
-                <div class="logo">
-                    <img src="{{ asset('img/Logo.png') }}" alt="Logo"> Edvizo
-                </div>
-                <div class="slogan">
-                    <h1><span class="highlight">Kompas</span> Anda untuk <span class="highlight">Jurusan</span> yang Tepat.</h1>
-                </div>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-md">
+        <!-- Logo & Title -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-lg mb-4">
+                <img src="{{ asset('images/Vectoredvizo.svg') }}" alt="Edvizo Logo" class="w-10 h-10">
             </div>
-
-            <div class="right-panel">
-                <h2>Register</h2>
-                
-                <form action="{{ route('register.action') }}" method="POST">
-                    @csrf
-                    @if($errors->any())
-        <div class="alert-error">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li><i class="fas fa-exclamation-triangle"></i> {{ $error }}</li>
-                @endforeach
-            </ul>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Buat Akun Edvizo</h1>
+            <p class="text-gray-600">Mulai perjalanan pendidikan Anda bersama kami</p>
         </div>
-    @endif
-                    <div class="input-group">
-                        <input type="text" name="name" placeholder="Full Name / Username" required>
+
+        <!-- Register Form Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+            @if($errors->any())
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-lg">
+                    <div class="flex">
+                        <svg class="w-5 h-5 text-red-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="flex-1">
+                            <p class="text-sm text-red-700 font-medium mb-2">Terjadi kesalahan:</p>
+                            <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
+                </div>
+            @endif
 
-                    <div class="input-group">
-                        <input type="email" name="email" placeholder="Email Address" required>
+            <form action="{{ route('register.process') }}" method="POST" class="space-y-6">
+                @csrf
+
+                <!-- Name Field -->
+                <div>
+                    <label for="name" class="block text-sm font-bold text-gray-700 mb-2">
+                        Nama Lengkap
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                               class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition"
+                               placeholder="Masukkan nama lengkap Anda">
                     </div>
-                    
-                    <div class="input-group password-group">
-                        <input type="password" name="password" id="passInput" placeholder="Password" required>
-                        <i class="fas fa-eye-slash toggle-password" onclick="togglePass('passInput', this)"></i>
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <label for="email" class="block text-sm font-bold text-gray-700 mb-2">
+                        Email
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" required
+                               class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition"
+                               placeholder="nama@email.com">
                     </div>
+                </div>
 
-                    <div class="input-group password-group">
-                        <input type="password" name="password_confirmation" id="confPassInput" placeholder="Confirm Password" required>
-                        <i class="fas fa-eye-slash toggle-password" onclick="togglePass('confPassInput', this)"></i>
+                <!-- Password Field -->
+                <div>
+                    <label for="password" class="block text-sm font-bold text-gray-700 mb-2">
+                        Password
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <input type="password" id="password" name="password" required
+                               class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition"
+                               placeholder="Minimal 8 karakter">
                     </div>
+                    <p class="text-xs text-gray-500 mt-2">Password harus minimal 8 karakter</p>
+                </div>
 
-                    <div class="options" style="justify-content: flex-start; gap: 10px;">
-                        <input type="checkbox" required> 
-                        <span style="font-size: 11px;">I agree with <b>Terms & Conditions</b> and <b>Privacy Policy</b></span>
+                <!-- Confirm Password Field -->
+                <div>
+                    <label for="password_confirmation" class="block text-sm font-bold text-gray-700 mb-2">
+                        Konfirmasi Password
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <input type="password" id="password_confirmation" name="password_confirmation" required
+                               class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3B8773] focus:border-[#3B8773] outline-none transition"
+                               placeholder="Ketik ulang password Anda">
                     </div>
+                </div>
 
-                    <button type="submit" class="btn-signin">Sign Up</button>
-                    
-                    <div class="divider">Or</div>
+                <!-- Submit Button -->
+                <button type="submit"
+                        class="w-full bg-[#3B8773] text-white py-4 rounded-xl font-bold hover:bg-[#2E6B5B] transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                    </svg>
+                    Daftar Sekarang
+                </button>
+            </form>
 
-                    <button type="button" class="btn-google">
-                        <i class="fab fa-google"></i> Sign Up with Google
-                    </button>
-                </form>
-
-                <p class="register-link">Already have an Account? <a href="{{ route('login') }}">Login.</a></p>
+            <!-- Divider -->
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-200"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-4 bg-white text-gray-500 font-medium">Atau</span>
+                </div>
             </div>
+
+            <!-- Login Link -->
+            <div class="text-center">
+                <p class="text-gray-600 text-sm">
+                    Sudah punya akun?
+                    <a href="{{ route('login') }}" class="text-[#3B8773] font-bold hover:text-[#2E6B5B] transition">
+                        Masuk di sini
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="text-center mt-6">
+            <a href="/" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#3B8773] transition text-sm font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Kembali ke Beranda
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 text-xs text-gray-500">
+            <p>&copy; 2025 Edvizo. All rights reserved.</p>
         </div>
     </div>
-
-    <script>
-        function togglePass(inputId, icon) {
-            const input = document.getElementById(inputId);
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            icon.classList.toggle('fa-eye-slash');
-            icon.classList.toggle('fa-eye');
-        }
-    </script>
-
 </body>
 </html>

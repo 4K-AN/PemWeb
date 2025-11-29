@@ -174,9 +174,9 @@
                                             {{ $beasiswa->jenis_beasiswa }}
                                         </span>
                                     @endif
-                                    @if($beasiswa->jenjang)
+                                    @if($beasiswa->status)
                                         <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                                            {{ $beasiswa->jenjang }}
+                                            {{ $beasiswa->status }}
                                         </span>
                                     @endif
                                 </div>

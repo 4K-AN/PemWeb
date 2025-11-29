@@ -10,31 +10,21 @@ class Beasiswa extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama_beasiswa',
+        'nama',
         'deskripsi',
         'universitas',
         'jenis_beasiswa',
-        'jenjang',
         'kategori',
         'negara',
         'status',
         'deadline',
-        'ipk_minimal',
-        'benefit_biaya_kuliah',
-        'benefit_biaya_hidup',
-        'benefit_tiket_pesawat',
-        'benefit_asuransi',
+        'jurusan',
         'link_pendaftaran',
         'gambar'
     ];
 
     protected $casts = [
         'deadline' => 'date',
-        'ipk_minimal' => 'decimal:2',
-        'benefit_biaya_kuliah' => 'boolean',
-        'benefit_biaya_hidup' => 'boolean',
-        'benefit_tiket_pesawat' => 'boolean',
-        'benefit_asuransi' => 'boolean',
     ];
 
     // Scope untuk filter

@@ -13,12 +13,13 @@ return new class extends Migration
             $table->string('nama');
             $table->text('deskripsi')->nullable();
             $table->string('universitas');
-            $table->string('kategori')->nullable(); // Kolom kategori ditambahkan
+            $table->string('jenis_beasiswa', 100)->nullable();
+            $table->string('kategori')->nullable();
             $table->string('negara');
             $table->string('status', 50)->nullable();
             $table->date('deadline')->nullable();
-            $table->decimal('ipk_minimal', 3, 2)->nullable();
             $table->string('jurusan')->nullable();
+            $table->string('link_pendaftaran')->nullable();
             $table->string('gambar')->nullable();
             $table->timestamps();
         });

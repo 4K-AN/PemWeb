@@ -26,7 +26,6 @@ return new class extends Migration
             DB::statement('ALTER TABLE `beasiswas` MODIFY `gambar` VARCHAR(255) NULL');
             DB::statement('ALTER TABLE `beasiswas` MODIFY `status` VARCHAR(50) NULL');
             DB::statement('ALTER TABLE `beasiswas` MODIFY `jenjang` VARCHAR(50) NULL');
-            DB::statement('ALTER TABLE `beasiswas` MODIFY `ipk_minimal` DECIMAL(3,2) NULL');
         }
 
         // Untuk SQLite, tidak perlu modify karena semua kolom sudah nullable by default
@@ -35,7 +34,6 @@ return new class extends Migration
             DB::statement('ALTER TABLE beasiswas ALTER COLUMN gambar DROP NOT NULL');
             DB::statement('ALTER TABLE beasiswas ALTER COLUMN status DROP NOT NULL');
             DB::statement('ALTER TABLE beasiswas ALTER COLUMN jenjang DROP NOT NULL');
-            DB::statement('ALTER TABLE beasiswas ALTER COLUMN ipk_minimal DROP NOT NULL');
         }
     }
 
