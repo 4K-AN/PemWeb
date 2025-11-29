@@ -61,7 +61,6 @@ Eksplorasi karir berdasarkan jurusan yang sudah difiksasi dengan informasi tenta
 
 ---
 
----
 
 ## 🚀 Setup Project
 
